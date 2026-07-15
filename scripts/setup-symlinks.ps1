@@ -69,7 +69,7 @@ Get-ChildItem $common -Directory | ForEach-Object {
 }
 Write-Host "  完成: $count 个技能"
 
-# --- 通道 B: Kimi Work/Chat 复制 ---
+# --- 通道 B: Kimi Work 模式复制 ---
 $kimiWork = "C:\Users\$env:USERNAME\AppData\Roaming\kimi-desktop\daimon-share\daimon\skills"
 if (-not (Test-Path $kimiWork)) {
     Write-Host ""
@@ -78,7 +78,7 @@ if (-not (Test-Path $kimiWork)) {
 } else {
     Write-Host ""
     Write-Host "═══════════════════════════════════════════════════════"
-    Write-Host "  复制到 Kimi Work/Chat 目录 (原生目录，非软链接)"
+    Write-Host "  复制到 Kimi Work 模式目录（Chat 模式不受影响）"
     Write-Host "═══════════════════════════════════════════════════════"
     
     $count = 0
@@ -108,7 +108,7 @@ Write-Host "══════════════════════�
 Write-Host "  全部设置完成"
 Write-Host "═══════════════════════════════════════════════════════"
 Write-Host "[提示] Cursor/Codex/Trae/Qoder/KimiCodeIDE 技能已生效（软链接）"
-Write-Host "[提示] Kimi Work/Chat 需要重启客户端以加载新技能（复制）"
+Write-Host "[提示] Kimi Work 模式需要重启客户端以加载新技能（复制）"
 Write-Host ""
 
 # 暂停显示结果（如果是双击运行）

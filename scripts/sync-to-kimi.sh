@@ -1,11 +1,12 @@
 #!/bin/bash
 # =============================================================================
-# CommonSkills -> Kimi Work/Chat 双通道同步脚本
+# CommonSkills -> Kimi Work 模式双通道同步脚本
 # =============================================================================
 # 触发时机：git merge / checkout / commit 后（通过 git hook）
 # 作用：
 #   1. 通道 A（软链接）：Cursor/Codex/Trae/Qoder/KimiCodeIDE —— 已存在，无需操作
-#   2. 通道 B（复制）：Kimi Work/Chat —— 将 CommonSkills 中的技能复制为原生目录
+#   2. 通道 B（复制）：Kimi Work 模式 —— 将 CommonSkills 中的技能复制为原生目录
+#   注：Kimi Chat 模式不受影响，不在本次同步范围内
 # =============================================================================
 
 set -e
@@ -86,6 +87,7 @@ echo "  跳过:     $skip_count 个技能（无需更新）"
 echo "  错误:     $error_count 个技能"
 echo "═══════════════════════════════════════════════════════"
 echo ""
-echo "[提示] 请重启 Kimi 客户端（Work/Chat 模式）以加载新技能"
+echo "[提示] 请重启 Kimi 客户端（Work 模式）以加载新技能"
+echo "[提示] Kimi Chat 模式不受影响，无需重启"
 echo "[提示] Cursor/Codex/Trae/Qoder/KimiCodeIDE 通过软链接实时生效，无需重启"
 echo ""
