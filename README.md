@@ -8,7 +8,7 @@
 
 本仓库集中管理所有可被多个 AI Agent 平台复用的技能（Skill），包括：
 
-- **Kimi**（Work 模式 / Chat 模式 / Kimi Code IDE 插件）
+- **Kimi**（Work 模式 / Kimi Code IDE 插件）
 - **Cursor**
 - **Codex**
 - **Trae**
@@ -56,13 +56,13 @@ CommonSkills/
 - 零维护：无需手动复制
 - 节省磁盘空间
 
-### 通道 B：Native Directory Copy（原生目录复制）—— 适用于 Kimi Work 模式（Chat 模式不受影响，不在同步范围内）
+### 通道 B：Native Directory Copy（原生目录复制）—— 适用于 Kimi Work 模式
 
 **Kimi 桌面客户端（Work 模式）的 `daimon` 内核在扫描技能目录时，会跳过 Symbolic Link（软链接）**。因此必须采用**原生目录复制**方式：
 
 | Agent 程序 | 复制目标路径 | 来源 |
 |-----------|-----------|------|
-| Kimi Work 模式（Chat 模式不受影响） | `~/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills/<skill-name>` | `~/CommonSkills/<skill-name>` |
+| Kimi Work 模式 | `~/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills/<skill-name>` | `~/CommonSkills/<skill-name>` |
 
 **特点**：
 - 需要复制（不是软链接）
@@ -130,15 +130,15 @@ Get-ChildItem $common -Directory | ForEach-Object {
 
 ### 原理
 
-通过 Git Hook 实现：当 `CommonSkills` 仓库更新（pull / merge / checkout）时，**自动触发同步脚本**，确保 Kimi Work 模式的技能目录始终与仓库最新版本一致。（Kimi Chat 模式不受影响，不在同步范围内）
+通过 Git Hook 实现：当 `CommonSkills` 仓库更新（pull / merge / checkout）时，**自动触发同步脚本**，确保 Kimi Work 模式的技能目录始终与仓库最新版本一致。
 
 ### 已配置的 Hook
 
 | Hook 类型 | 触发时机 | 作用 |
 |----------|---------|------|
-| `post-merge` | 执行 `git pull` 或 `git merge` 后 | 同步最新技能到 Kimi Work 模式（Chat 模式不受影响） |
-| `post-checkout` | 执行 `git checkout` 切换分支后 | 同步当前分支技能到 Kimi Work 模式（Chat 模式不受影响） |
-| `post-commit` | 执行 `git commit` 后 | 可选：同步本地修改到 Kimi Work 模式（Chat 模式不受影响） |
+| `post-merge` | 执行 `git pull` 或 `git merge` 后 | 同步最新技能到 Kimi Work 模式 |
+| `post-checkout` | 执行 `git checkout` 切换分支后 | 同步当前分支技能到 Kimi Work 模式 |
+| `post-commit` | 执行 `git commit` 后 | 可选：同步本地修改到 Kimi Work 模式 |
 
 ### 同步脚本逻辑（`scripts/sync-to-kimi.sh`）
 
@@ -146,7 +146,7 @@ Get-ChildItem $common -Directory | ForEach-Object {
 #!/bin/bash
 # 双通道同步脚本
 # 通道 A：软链接（已存在，无需操作）
-# 通道 B：复制到 Kimi Work 模式目录（Chat 模式不受影响）
+# 通道 B：复制到 Kimi Work 模式目录
 
 COMMON="C:/Users/$(whoami)/CommonSkills"
 KIMI_WORK="C:/Users/$(whoami)/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills"
@@ -221,12 +221,11 @@ chmod +x .git/hooks/post-checkout
 
 3. **自动同步（Git Hook）**
    - `post-commit` / `post-merge` / `post-checkout` 会自动执行同步脚本
-   - Kimi Work 模式目录会复制新增技能（Chat 模式不受影响）
+   - Kimi Work 模式目录会复制新增技能
    - 其他 Agent（Cursor/Codex/Trae/Qoder/KimiCodeIDE）通过软链接实时生效
 
 4. **验证**
    - 重启 Kimi 客户端（Work 模式），搜索新技能名称
-   - Kimi Chat 模式不受影响，无需验证
    - 在 Cursor/Codex/Trae/Qoder 中验证新技能可用
    - 重启 Kimi 客户端，搜索新技能名称
    - 在 Cursor/Codex/Trae/Qoder 中验证新技能可用
@@ -238,7 +237,7 @@ chmod +x .git/hooks/post-checkout
 | Agent | 技能目录 | 加载方式 | 是否需要重启 |
 |-------|---------|---------|------------|
 | **Kimi Work 模式** | `~/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills/` | 复制（原生目录） | ✅ 需要重启客户端 |
-| **Kimi Chat 模式** | — | 不受影响，不在同步范围内 | — |
+| **Kimi Code IDE** | `~/.kimi/skills/` | 软链接 | ❌ 实时生效 |
 | **Kimi Code IDE** | `~/.kimi/skills/` | 软链接 | ❌ 实时生效 |
 | **Cursor** | `~/.cursor/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
 | **Codex** | `~/.codex/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
@@ -251,7 +250,7 @@ chmod +x .git/hooks/post-checkout
 
 ## ⚠️ 已知限制与注意事项
 
-### 1. Kimi Work 模式不支持软链接（Chat 模式不受影响）
+### 1. Kimi Work 模式不支持软链接
 
 **根本原因**：Kimi 桌面客户端的 `daimon` 内核在扫描 `daimon-share/daimon/skills/` 时，使用 `fs.readdir` 的 `withFileTypes: true` 并检查 `dirent.isSymbolicLink()`，主动跳过所有 Symbolic Link（软链接）和 Junction（目录联接）。
 
@@ -268,7 +267,6 @@ chmod +x .git/hooks/post-checkout
 Kimi 客户端 Work 模式与 Kimi Code IDE 插件使用**不同的配置文件**：
 - Kimi Code IDE 插件：`~/.kimi/config.toml`（支持 `extra_skill_dirs`）
 - Kimi Work 模式：`daimon-share/daimon/runtime/kimi-code/config.toml`（`extra_skill_dirs` 可能无效）
-- Kimi Chat 模式：不受影响，不在本次同步范围内
 
 ### 3. 内置技能（builtin-skills）
 
@@ -282,7 +280,7 @@ Kimi 客户端打包了 34 个内置技能（`builtin-skills`），位于：
 
 ## 🔧 故障排查
 
-### 问题：Kimi Work 模式找不到某个技能（Chat 模式不受影响）
+### 问题：Kimi Work 模式找不到某个技能
 
 **排查步骤**：
 1. 确认技能目录在 `daimon-share/daimon/skills/` 下是**原生目录**（不是软链接）
