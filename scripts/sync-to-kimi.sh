@@ -6,7 +6,6 @@
 # 作用：
 #   1. 通道 A（软链接）：Cursor/Codex/Trae/Qoder/KimiCodeIDE —— 已存在，无需操作
 #   2. 通道 B（复制）：Kimi Work 模式 —— 将 CommonSkills 中的技能复制为原生目录
-#   注：Kimi Chat 模式不受影响，不在本次同步范围内
 # =============================================================================
 
 set -e
@@ -52,14 +51,18 @@ for skill in */; do
     [ -f "$src" ] && continue
     
     # 检查目标是否已经是原生目录（非软链接）
-    if [ -d "$dst" ] && [ ! -L "$dst" ]; then
-        # 比较修改时间，如果源文件未更新则跳过
-        if [ "$src" -ot "$dst" ] 2>/dev/null; then
-            skip_count=$((skip_count + 1))
-            continue
-        fi
+    # 检查是否需要同步：目标不存在、目标是软链接、或 SKILL.md 有更新
+    need_sync=false
+    if [ ! -d "$dst" ] || [ -L "$dst" ]; then
+        need_sync=true
+    elif [ "$src/SKILL.md" -nt "$dst/SKILL.md" ] 2>/dev/null; then
+        need_sync=true
     fi
     
+    if [ "$need_sync" = false ]; then
+        skip_count=$((skip_count + 1))
+        continue
+    fi
     # 如果目标是软链接，先删除
     if [ -L "$dst" ]; then
         rm -f "$dst"
@@ -88,6 +91,5 @@ echo "  错误:     $error_count 个技能"
 echo "═══════════════════════════════════════════════════════"
 echo ""
 echo "[提示] 请重启 Kimi 客户端（Work 模式）以加载新技能"
-echo "[提示] Kimi Chat 模式不受影响，无需重启"
 echo "[提示] Cursor/Codex/Trae/Qoder/KimiCodeIDE 通过软链接实时生效，无需重启"
 echo ""
