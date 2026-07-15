@@ -238,7 +238,6 @@ chmod +x .git/hooks/post-checkout
 |-------|---------|---------|------------|
 | **Kimi Work 模式** | `~/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills/` | 复制（原生目录） | ✅ 需要重启客户端 |
 | **Kimi Code IDE** | `~/.kimi/skills/` | 软链接 | ❌ 实时生效 |
-| **Kimi Code IDE** | `~/.kimi/skills/` | 软链接 | ❌ 实时生效 |
 | **Cursor** | `~/.cursor/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
 | **Codex** | `~/.codex/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
 | **Trae** | `~/.trae/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
