@@ -1,0 +1,26 @@
+[
+    {
+        "rule_name": "法规政策变化",
+        "rule_desc": "依据的法律、法规、标准或上位预案发生重大调整",
+        "other_content": "重点关注《安全生产法》、《突发事件应对法》等相关法规的变更",
+        "rule_code": "rules_policies"
+    },
+    {
+        "rule_name": "组织体系调整",
+        "rule_desc": "应急指挥组织职责重大变更",
+        "other_content": "关注应急管理部门、指挥部成员单位的变更情况",
+        "rule_code": "organizational_system"
+    },
+    {
+        "rule_name": "风险资源变化",
+        "rule_desc": "面临重大变化或重要应急资源重大调整",
+        "other_content": "",
+        "rule_code": "risk_resource"
+    },
+    {
+        "rule_name": "演练或事故暴露问题",
+        "rule_desc": "应急演练评估发现重大缺陷或事故处置中暴露出预案漏洞",
+        "other_content": "",
+        "rule_code": "accident_issue"
+    }
+]

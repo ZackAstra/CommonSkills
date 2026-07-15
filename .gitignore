@@ -1,0 +1,22 @@
+# 忽略中间分析文件和日志
+*_REPORT.md
+*_AUDIT.md
+*_ANALYSIS.md
+*_analysis.md
+*.log
+*_log.txt
+
+# 忽略测试文件
+test-*
+
+# 忽略系统文件
+.DS_Store
+Thumbs.db
+
+# 忽略 IDE 配置
+.vscode/
+.idea/
+
+# 忽略 git 本身（已在 .git 中）
+.git/
+*.pyz

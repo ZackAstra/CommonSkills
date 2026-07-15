@@ -1,0 +1,67 @@
+{
+    "data": [
+        {
+            "head": "上界头村村委会",
+            "head_type": "Shelter",
+            "head_properties": {
+                "shelter_name": "上界头村村委会",
+                "shelter_area": "300m2",
+                "shelter_address": "上界头村村委会",
+                "shelter_entralized_capacity": "80",
+                "shelter_bed_count": "45"
+            },
+            "relation": "shelterLeader",
+            "tail": "李付燕",
+            "tail_type": "Person",
+            "tail_properties": {
+                "person_name": "李付燕",
+                "person_role": "安置点责任人",
+                "person_position": "应急办负责人",
+                "person_phone_number": "18607497746",
+                "person_belonging_organization": "应急局"
+            }
+        },
+        {
+            "head": "上界头村村委会",
+            "head_type": "Shelter",
+            "head_properties": {
+                "shelter_name": "上界头村村委会",
+                "shelter_area": "300m2",
+                "shelter_address": "上界头村村委会",
+                "shelter_entralized_capacity": "80",
+                "shelter_bed_count": "45"
+            },
+            "relation": "lifeAssistanceResponsible",
+            "tail": "李云",
+            "tail_type": "Person",
+            "tail_properties": {
+                "person_name": "李云",
+                "person_role": "生活保障负责人",
+                "person_position": "应急办负责人",
+                "person_phone_number": "18607497746",
+                "person_belonging_organization": "应急局"
+            }
+        },
+        {
+            "head": "上界头村村委会",
+            "head_type": "Shelter",
+            "head_properties": {
+                "shelter_name": "上界头村村委会",
+                "shelter_area": "300m2",
+                "shelter_address": "上界头村村委会",
+                "shelter_entralized_capacity": "80",
+                "shelter_bed_count": "45"
+            },
+            "relation": "medicalAssistanceResponsible",
+            "tail": "付云",
+            "tail_type": "Person",
+            "tail_properties": {
+                "person_name": "付云",
+                "person_role": "医疗保障负责人",
+                "person_position": "应急办负责人",
+                "person_phone_number": "18607497746",
+                "person_belonging_organization": "应急局"
+            }
+        }
+    ]
+}

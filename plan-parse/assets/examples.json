@@ -1,0 +1,1000 @@
+{
+    "EmergencyPlan": {
+        "applicableRegion": [
+            {
+                "tail": "湖南省永州市东安县白牙市镇",
+                "tail_type": "Region",
+                "tail_properties": {
+                    "region_name": "湖南省永州市东安县白牙市镇",
+                    "region_code": "431122100000",
+                    "region_level": "镇级"
+                }
+            }
+        ],
+        "hasComandCenter": [
+            {
+                "tail": "组织指挥",
+                "tail_type": "CommandStructure",
+                "tail_properties": {
+                    "command_structure_member_introduction": "党政办、应急办、生态办、自然资源所、镇应急救援队、所在村、社区应急救援队和供电所、派出所干警、各村辅警、卫生院医务人员、所在村村医、财政所、民政所、供电所",
+                    "command_structure_duty": "在镇党委、政府领导下，成立防汛抗灾突发事件应对办公室，下设五个工作组，负责洪涝灾害、地质灾害等自然灾害的应对处置"
+                }
+            }
+        ],
+        "hasPreWarningAction": [
+            {
+                "tail": "蓝色",
+                "tail_type": "PreWarningAction",
+                "tail_properties": {
+                    "pre_warning_action_level": "蓝色",
+                    "pre_warning_action_content_list": "当收到洪水蓝色预警时，立即启动应急响应，通知沿河村做好转移准备工作，核实需转移人员在位情况；镇长负责在指挥机构坐镇指挥。"
+                }
+            },
+            {
+                "tail": "黄色",
+                "tail_type": "PreWarningAction",
+                "tail_properties": {
+                    "pre_warning_action_level": "黄色",
+                    "pre_warning_action_content_list": "1.当收到暴雨和地质灾害黄色预警时，值班人员密切关注天气变化，实时掌握雨情变化，做好预警信息传达；熟悉应急预案，掌握需转移人员分布情况。2.当收到洪水黄色预警时，立即启动应急响应，做好紫水河、湘江西源、宥江河、枧田水、龙溪河、官田水沿河低洼地带居民的转移工作。"
+                }
+            },
+            {
+                "tail": "橙色",
+                "tail_type": "PreWarningAction",
+                "tail_properties": {
+                    "pre_warning_action_level": "橙色",
+                    "pre_warning_action_content_list": "1.当收到暴雨和地质灾害橙色预警时，值班员、值班领导和相关责任人应密切关注雨情变化，及时传送预警信息；安排人员到高风险点巡查，必要时及时转移。2.镇、村电话叫应橙色预警区域村组做好防范应对情况；3.组织清点雨衣、雨伞、帐篷、锣鼓、喇叭、广播、口哨、手电筒、警戒线、皮筏艇、冲锋舟等物资情况，落实铲车、挖机等救援装备；4.镇应急救援力量集结待命，进入应急状态。"
+                }
+            },
+            {
+                "tail": "红色",
+                "tail_type": "PreWarningAction",
+                "tail_properties": {
+                    "pre_warning_action_level": "红色",
+                    "pre_warning_action_content_list": "1.收到暴雨红色预警时镇长在岗值班，镇分管防汛领导带队前置到受威胁的区域；书记、镇长落实“AB 角”工作制，安排部署有关防范措施，必要时，安排联系村组党政领导全部下到一线；2.收到洪水红色预警时，启动一级响应；3.通过村村响广播、微信、紧急鸣锣、拉响警报器等方式对预警信息进行密集传送，对老幼病残孕等特殊人群组织人员逐户通知传送；4.组织村应急救援队员加强对切坡建房地、地质灾害点、危旧房屋、河堤、水库、山塘、重点施工场所等高风险点持续不间断地开展巡查排查，及时发现、报告、处置险情；5.限制易受突发性事件危害的场所；6.中止易受突发性事件危害的活动；7.组织高风险点开展紧急疏散转移；8.对受影响较大的学校、生产经营单位采取“三停（停课、停业、停集会）”措施；9.镇应急救援力量全员集结待命，进入应急状态。"
+                }
+            }
+        ],
+        "hasResponseAction": [
+            {
+                "tail": "Ⅰ级",
+                "tail_type": "ResponseAction",
+                "tail_properties": {
+                    "pre_warning_action_level": "Ⅰ级",
+                    "response_action_trigger_conditions": "初判下列条件之一：1、雨量监测24小时降雨量在150毫米以上且强降雨仍将持续；2、发生超历史水位的洪水；3、本辖区小一型水库发生重大险情，极可能溃坝，威胁本镇村民生命安全；                                                          4、因暴雨致地质灾害，发生1人以上死亡；或3人以上重伤（失踪、被困）；或需转移安置50人以上；直接经济损失50万元以上的灾害事故。",
+                    "pre_warning_action_content_list": "在二级响应行动的基础上，加强以下措施：1.书记、镇长采取AB角机制，一人赶赴受灾最重现场指挥抢险救援，一人坐镇会商室统筹调度全镇抢险救灾工作；2.请求上级调派应急救援队伍和其他镇镇专业队伍跨区域支援；3.发布命令，禁止或者限制使用、拆除或迁移妨碍应急处置与救援的有关设备、设施，关闭有关场所，中止人员密集活动或者可能导致危害扩大的生产经营活动以及采取其他应急措施；4.依法从严惩处哄抢财物、干扰破坏应急处置工作等扰乱社会秩序的行为，维护社会治安。"
+                }
+            },
+            {
+                "tail": "Ⅱ级",
+                "tail_type": "ResponseAction",
+                "tail_properties": {
+                    "pre_warning_action_level": "Ⅱ级",
+                    "response_action_trigger_conditions": "达到下列条件之一：1.雨量监测24小时降雨量在100毫米以上150毫米以下且强降雨仍将持续；2.湘江东安段发生超警戒流量的洪水；3.本辖区小一、二型水库、骨干山塘发生险情，威胁本镇村民生命安全；4.降雨量虽不足100毫米，但多日连续降雨导致土壤含水量高，发生山体滑坡，塌陷等地质灾害风险较高；5.因暴雨致地质灾害，发生1-2人重伤（失踪、被困）；或需转移安置50人以内；或直接经济损失50万元以下的灾害事故；6.上级专业部门发布危及本镇的红色预警。",
+                    "pre_warning_action_content_list": "1.采取AB角机制，保证党委、政府负责同志坐镇指挥、赶赴一线并行并重；2.带片领导、分管防汛领导深入受灾点，组织抢险救灾工作；3.镇政府各部门、相关单位和村全部进入应急状态，24小时在岗在位，按职责分工投入抢险救援；4.组织应急力量迅速开展抢险救援工作，营救受灾和被困人员，疏散撤离受威胁人员，封锁危险区域，划定警戒区；5.组织镇、村干部、党员、组长、志愿者，“一对一”“户帮户”及时、迅速、安全转移重点人群，确保“不漏1户、不漏1人”；6.启用安置点，安置撤离群众的临时生活；7.在低洼积水路段设置警示牌，由村辅警、交通劝导员负责值班值守，实行交通引导；8.组织对切坡建房地、地质灾害点、危旧房屋、河堤、水库、山塘、重点施工场所等高风险点持续不间断地开展巡查排查，及时发现、报告、处置险情；9.密切关注沿河、溪、沟水位上涨情况，防范小流域洪水、滑坡、泥石流等灾害。"
+                }
+            }
+        ]
+    },
+    "CommandStructure": {
+        "includesWorkGroup": [
+            {
+                "tail": "综合协调组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "综合协调组",
+                    "work_group_duty": "负责接收上级命令指示，搜集雨情、水情、灾情、工情、险情等情况，实时掌握汛情动态、人员转移和救援进展情况，及时向上级部门报送相关情况，协调各方参加抢险救援工作，督促各村落实镇党委政府指挥决策",
+                    "work_group_member_introduction": "党政办、应急办、生态办、自然资源所工作人员"
+                }
+            },
+            {
+                "tail": "抢险救援组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "抢险救援组",
+                    "work_group_duty": "负责搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "work_group_member_introduction": "镇应急救援队、所在村、社区应急救援队和供电所人员"
+                }
+            },
+            {
+                "tail": "抢险救援组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "抢险救援组",
+                    "work_group_duty": "负责搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "work_group_member_introduction": "镇应急救援队、所在村、社区应急救援队和供电所人员"
+                }
+            },
+            {
+                "tail": "警戒疏散组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "警戒疏散组",
+                    "work_group_duty": "负责高风险点群众转移，负责低洼路段设置警示标志和交通管制，负责保障抢险救援道路畅通，引导救援力量进场",
+                    "work_group_member_introduction": "派出所干警、各村辅警"
+                }
+            },
+            {
+                "tail": "医疗救护组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "医疗救护组",
+                    "work_group_duty": "负责组织救护车辆、医务人员、急救药品、急救设施进入现场抢救、转运伤员和灾后的卫生消杀工作。",
+                    "work_group_member_introduction": "卫生院医务人员、所在村村医"
+                }
+            },
+            {
+                "tail": "后勤保障组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "后勤保障组",
+                    "work_group_duty": "负责应急避难场所搭建帐篷，提供电力、饮水、餐饮、交通工具，安置受灾人员，恢复生产等善后，为救援队伍和人员提供物资和生活保障",
+                    "work_group_member_introduction": "财政所、民政所、供电所人员"
+                }
+            }
+        ],
+        "hasCommander": [
+            {
+                "tail": "叶君山",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "叶君山",
+                    "person_role": "指挥长",
+                    "person_position": "负责全面指挥协调工作，落实“AB角”工作机制，启动一级响应后，坐镇镇党委（政府）指挥。需赴一线指挥时，安排镇长坐镇党委（政府）指挥",
+                    "person_phone_number": "",
+                    "person_belonging_organization": "镇党委"
+                }
+            }
+        ],
+        "hasDeputyCommander": [
+            {
+                "tail": "吴又辉",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "吴又辉",
+                    "person_role": "副指挥长",
+                    "person_position": "负责组织制定防汛抗灾抢险救援方案，其落实“AB 角”工作机制，启动二级响应后，坐镇镇党委（政府）指挥",
+                    "person_phone_number": "",
+                    "person_belonging_organization": "镇党委"
+                }
+            }
+        ]
+    },
+    "WorkGroup": {
+        "hasLeader": [
+            {
+                "tail": "蒋建波",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "蒋建波",
+                    "person_role": "组长",
+                    "person_position": "党委专职副书记",
+                    "person_phone_number": "13574658000",
+                    "person_belonging_organization": "镇政府"
+                }
+            }
+        ],
+        "hasDeputyLeader": [
+            {
+                "tail": "彭惜亮",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "彭惜亮",
+                    "person_role": "副组长",
+                    "person_position": "",
+                    "person_phone_number": "",
+                    "person_belonging_organization": ""
+                }
+            }
+        ],
+        "hasMember": [
+            {
+                "tail": "xxx",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "xxx",
+                    "person_role": "成员",
+                    "person_position": "",
+                    "person_phone_number": "",
+                    "person_belonging_organization": ""
+                }
+            }
+        ]
+    },
+    "PreWarningAction": {
+        "containsActionItem": [
+            {
+                "tail": "组织指挥",
+                "tail_type": "PreWarningActionOrganizingCommandItem",
+                "tail_properties": {
+                    "pre_warning_action_item_name": "组织指挥",
+                    "pre_warning_action_item_description": "负责洪涝灾害、地质灾害等自然灾害的应对处置",
+                    "pre_warning_action_item_member_introduction": "镇长"
+                }
+            },
+            {
+                "tail": "防汛值班",
+                "tail_type": "PreWarningActionFloodControlWatchItem",
+                "tail_properties": {
+                    "pre_warning_action_item_name": "防汛值班",
+                    "pre_warning_action_item_description": "应密切关注雨情变化，及时传送预警信息",
+                    "pre_warning_action_item_member_introduction": "值班人员、值班领导、镇分管防汛领导"
+                }
+            },
+            {
+                "tail": "巡查排险",
+                "tail_type": "PreWarningActionRiskInspectionAndRemovalItem",
+                "tail_properties": {
+                    "pre_warning_action_item_name": "巡查排险",
+                    "pre_warning_action_item_description": "加强对切坡建房地、地质灾害点、危旧房屋、河堤、水库、山塘、重点施工场所等高风险点持续不间断地开展巡查排查，及时发现、报告、处置险情",
+                    "pre_warning_action_item_member_introduction": "应急救援队员"
+                }
+            },
+            {
+                "tail": "三级包保",
+                "tail_type": "PreWarningActionEmergencyThreeTierPackageItem",
+                "tail_properties": {
+                    "pre_warning_action_item_name": "三级包保",
+                    "pre_warning_action_item_description": "明确各级管理人员和岗位在安全生产中的职责，强化安全生产管理，有效预防和减少交通运输安全事故的发生，保障人民群众生命财产安全",
+                    "pre_warning_action_item_member_introduction": "社区党委书记、党委委员、组织委员、县委副书记、党委专职副书记、县委常委、副县长、副镇长、武装部长、纪委书记、人大副主席、村支部书记、村党总支书记"
+                }
+            },
+            {
+                "tail": "转移安置",
+                "tail_type": "PreWarningActionEvacuationAndResettlementItem",
+                "tail_properties": {
+                    "pre_warning_action_item_name": "转移安置",
+                    "pre_warning_action_item_description": "抢在灾难全面发生之前，将处于高风险区域的人员和重要财产，安全、有序地转移到预定的安全场所，从而最大限度地避免和减少人员伤亡",
+                    "pre_warning_action_item_member_introduction": "镇、村干部、党员、组长、志愿者、辅警、交通劝导员"
+                }
+            }
+        ]
+    },
+    "ResponseAction": {
+        "containsActionItem": [
+            {
+                "tail": "组织指挥",
+                "tail_type": "ResponseActionOrganizingCommandItem",
+                "tail_properties": {
+                    "pre_warning_action_item_name": "组织指挥",
+                    "pre_warning_action_item_description": "组织抢险救灾工作",
+                    "pre_warning_action_item_member_introduction": "党委、政府同志、片领导、分管防汛领导"
+                }
+            },
+            {
+                "tail": "防汛值班",
+                "tail_type": "ResponseActionFloodControlWatchItem",
+                "tail_properties": {
+                    "pre_warning_action_item_name": "防汛值班",
+                    "pre_warning_action_item_description": "确保整个应急指挥体系高效、连续、有序运转的“神经中枢”和“信息枢纽",
+                    "pre_warning_action_item_member_introduction": "辅警、交通劝导员"
+                }
+            },
+            {
+                "tail": "巡查排险",
+                "tail_type": "ResponseActionRiskInspectionAndRemovalItem",
+                "tail_properties": {
+                    "pre_warning_action_item_name": "巡查排险",
+                    "pre_warning_action_item_description": "主动发现险情并紧急处置，防止风险扩大",
+                    "pre_warning_action_item_member_introduction": "应急救援队员"
+                }
+            },
+            {
+                "tail": "抢险救援",
+                "tail_type": "ResponseActionEmergencyResponseAndRescueItem",
+                "tail_properties": {
+                    "pre_warning_action_item_name": "抢险救援",
+                    "pre_warning_action_item_description": "搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "pre_warning_action_item_member_introduction": "社区党委书记、党委委员、组织委员、县委副书记、党委专职副书记、县委常委、副县长、副镇长、武装部长、纪委书记、人大副主席、村支部书记、村党总支书记"
+                }
+            },
+            {
+                "tail": "转移安置",
+                "tail_type": "ResponseActionEvacuationAndResettlementItem",
+                "tail_properties": {
+                    "pre_warning_action_item_name": "转移安置",
+                    "pre_warning_action_item_description": "抢在灾难全面发生之前，将处于高风险区域的人员和重要财产，安全、有序地转移到预定的安全场所，从而最大限度地避免和减少人员伤亡",
+                    "pre_warning_action_item_member_introduction": "镇、村干部、党员、组长、志愿者、辅警、交通劝导员"
+                }
+            }
+        ]
+    },
+    "PreWarningActionOrganizingCommandItem": {
+        "hasWorkGroup": [
+            {
+                "tail": "综合协调组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "综合协调组",
+                    "work_group_duty": "负责接收上级命令指示，搜集雨情、水情、灾情、工情、险情等情况，实时掌握汛情动态、人员转移和救援进展情况，及时向上级部门报送相关情况，协调各方参加抢险救援工作，督促各村落实镇党委政府指挥决策",
+                    "work_group_member_introduction": "党政办、应急办、生态办、自然资源所工作人员"
+                }
+            },
+            {
+                "tail": "抢险救援组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "抢险救援组",
+                    "work_group_duty": "负责搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "work_group_member_introduction": "镇应急救援队、所在村、社区应急救援队和供电所人员"
+                }
+            },
+            {
+                "tail": "抢险救援组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "抢险救援组",
+                    "work_group_duty": "负责搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "work_group_member_introduction": "镇应急救援队、所在村、社区应急救援队和供电所人员"
+                }
+            },
+            {
+                "tail": "警戒疏散组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "警戒疏散组",
+                    "work_group_duty": "负责高风险点群众转移，负责低洼路段设置警示标志和交通管制，负责保障抢险救援道路畅通，引导救援力量进场",
+                    "work_group_member_introduction": "派出所干警、各村辅警"
+                }
+            },
+            {
+                "tail": "医疗救护组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "医疗救护组",
+                    "work_group_duty": "负责组织救护车辆、医务人员、急救药品、急救设施进入现场抢救、转运伤员和灾后的卫生消杀工作。",
+                    "work_group_member_introduction": "卫生院医务人员、所在村村医"
+                }
+            },
+            {
+                "tail": "后勤保障组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "后勤保障组",
+                    "work_group_duty": "负责应急避难场所搭建帐篷，提供电力、饮水、餐饮、交通工具，安置受灾人员，恢复生产等善后，为救援队伍和人员提供物资和生活保障",
+                    "work_group_member_introduction": "财政所、民政所、供电所人员"
+                }
+            }
+        ]
+    },
+    "PreWarningActionFloodControlWatchItem": {
+        "hasWorkGroup": [
+            {
+                "tail": "综合协调组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "综合协调组",
+                    "work_group_duty": "负责接收上级命令指示，搜集雨情、水情、灾情、工情、险情等情况，实时掌握汛情动态、人员转移和救援进展情况，及时向上级部门报送相关情况，协调各方参加抢险救援工作，督促各村落实镇党委政府指挥决策",
+                    "work_group_member_introduction": "党政办、应急办、生态办、自然资源所工作人员"
+                }
+            },
+            {
+                "tail": "抢险救援组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "抢险救援组",
+                    "work_group_duty": "负责搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "work_group_member_introduction": "镇应急救援队、所在村、社区应急救援队和供电所人员"
+                }
+            },
+            {
+                "tail": "抢险救援组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "抢险救援组",
+                    "work_group_duty": "负责搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "work_group_member_introduction": "镇应急救援队、所在村、社区应急救援队和供电所人员"
+                }
+            },
+            {
+                "tail": "警戒疏散组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "警戒疏散组",
+                    "work_group_duty": "负责高风险点群众转移，负责低洼路段设置警示标志和交通管制，负责保障抢险救援道路畅通，引导救援力量进场",
+                    "work_group_member_introduction": "派出所干警、各村辅警"
+                }
+            },
+            {
+                "tail": "医疗救护组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "医疗救护组",
+                    "work_group_duty": "负责组织救护车辆、医务人员、急救药品、急救设施进入现场抢救、转运伤员和灾后的卫生消杀工作。",
+                    "work_group_member_introduction": "卫生院医务人员、所在村村医"
+                }
+            },
+            {
+                "tail": "后勤保障组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "后勤保障组",
+                    "work_group_duty": "负责应急避难场所搭建帐篷，提供电力、饮水、餐饮、交通工具，安置受灾人员，恢复生产等善后，为救援队伍和人员提供物资和生活保障",
+                    "work_group_member_introduction": "财政所、民政所、供电所人员"
+                }
+            }
+        ]
+    },
+    "PreWarningActionRiskInspectionAndRemovalItem": {
+        "hasHazardPoint": [
+            {
+                "tail": "龙庭水岸滑坡",
+                "tail_type": "HazardPoint",
+                "tail_properties": {
+                    "hazard_point_name": "龙庭水岸滑坡",
+                    "hazard_point_type": "滑坡",
+                    "hazard_point_location": "苍子岭社区",
+                    "hazard_description": "影响人员住址龙庭水岸2栋1单元101"
+                }
+            },
+            {
+                "tail": "树德家园西面滑坡",
+                "tail_type": "HazardPoint",
+                "tail_properties": {
+                    "hazard_point_name": "树德家园西面滑坡",
+                    "hazard_point_type": "滑坡",
+                    "hazard_point_location": "苍子岭社区",
+                    "hazard_description": "影响人员住址树德家园7栋一单元601"
+                }
+            },
+            {
+                "tail": "宥江桥13组滑坡",
+                "tail_type": "HazardPoint",
+                "tail_properties": {
+                    "hazard_point_name": "宥江桥13组滑坡",
+                    "hazard_point_type": "滑坡",
+                    "hazard_point_location": "宥江桥村13组",
+                    "hazard_description": "影响人员住址宥江桥村13组邹礼祥屋后"
+                }
+            }
+        ]
+    },
+    "PreWarningActionEmergencyThreeTierPackageItem": {
+        "hasThreeTierPackage": [
+            {
+                "tail": "东安县白牙市镇苍子岭社区",
+                "tail_type": "ThreeTierPackage",
+                "tail_properties": {
+                    "three_tier_package_area_name": "东安县白牙市镇苍子岭社区",
+                    "three_tier_package_task_description": "做好社区安全防范工作"
+                }
+            },
+            {
+                "tail": "东安县白牙市镇茶亭社区",
+                "tail_type": "ThreeTierPackage",
+                "tail_properties": {
+                    "three_tier_package_area_name": "东安县白牙市镇茶亭社区",
+                    "three_tier_package_task_description": "做好社区安全防范工作"
+                }
+            }
+        ]
+    },
+    "PreWarningActionEvacuationAndResettlementItem": {
+        "hasFamilyHousehold": [
+            {
+                "tail": "李聪",
+                "tail_type": "FamilyHousehold",
+                "tail_properties": {
+                    "household_name": "李聪",
+                    "household_address": "龙庭水岸2栋1单元A101",
+                    "household_phone_number": "18821983205",
+                    "number_of_people": "3"
+                }
+            },
+            {
+                "tail": "唐路娥",
+                "tail_type": "FamilyHousehold",
+                "tail_properties": {
+                    "household_name": "唐路娥",
+                    "household_address": "龙庭水岸2栋1单元101",
+                    "household_phone_number": "15116525216",
+                    "number_of_people": "1"
+                }
+            }
+        ]
+    },
+    "FamilyHousehold": {
+        "hasShelter": [
+            {
+                "tail": "电力公司家属院篮球场",
+                "tail_type": "Shelter",
+                "tail_properties": {
+                    "shelter_name": "电力公司家属院篮球场",
+                    "shelter_area": "东安县白牙市镇",
+                    "shelter_address": "电力小区",
+                    "shelter_entralized_capacity": "4",
+                    "shelter_bed_count": "1"
+                }
+            },
+            {
+                "tail": "社塘村委会",
+                "tail_type": "Shelter",
+                "tail_properties": {
+                    "shelter_name": "社塘村委会",
+                    "shelter_area": "东安县白牙市镇",
+                    "shelter_address": "社塘村委会",
+                    "shelter_entralized_capacity": "4",
+                    "shelter_bed_count": "1"
+                }
+            }
+        ]
+    },
+    "Shelter": {
+        "shelterLeader": [
+            {
+                "tail": "李付燕",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "李付燕",
+                    "person_role": "安置点责任人",
+                    "person_position": "应急办负责人",
+                    "person_phone_number": "18607497746",
+                    "person_belonging_organization": "应急局"
+                }
+            }
+        ],
+        "lifeAssistanceResponsible": [
+            {
+                "tail": "李云",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "李云",
+                    "person_role": "生活保障负责人",
+                    "person_position": "应急办负责人",
+                    "person_phone_number": "18607497746",
+                    "person_belonging_organization": "应急局"
+                }
+            }
+        ],
+        "medicalAssistanceResponsible": [
+            {
+                "tail": "付云",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "付云",
+                    "person_role": "医疗保障负责人",
+                    "person_position": "应急办负责人",
+                    "person_phone_number": "18607497746",
+                    "person_belonging_organization": "应急局"
+                }
+            }
+        ]
+    },
+    "HazardPoint": {
+        "hasAdministrativeResponsiblePerson": [
+            {
+                "tail": "刘红霞",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "刘红霞",
+                    "person_role": "管理责任人",
+                    "person_position": "隐患点管理人员",
+                    "person_phone_number": "13637462720",
+                    "person_belonging_organization": "白牙市镇"
+                }
+            }
+        ],
+        "hasTechnicalResponsiblePerson": [
+            {
+                "tail": "陈仁红",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "陈仁红",
+                    "person_role": "技术责任人",
+                    "person_position": "管护员",
+                    "person_phone_number": "13973486781",
+                    "person_belonging_organization": "山水村"
+                }
+            }
+        ],
+        "hasManagementResponsiblePerson": [
+            {
+                "tail": "邓禄玉",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "邓禄玉",
+                    "person_role": "管理责任人",
+                    "person_position": "村支书",
+                    "person_phone_number": "13762967291",
+                    "person_belonging_organization": "石登村"
+                }
+            }
+        ],
+        "hasPatrolResponsiblePerson": [
+            {
+                "tail": "唐孟军",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "唐孟军",
+                    "person_role": "巡查责任人",
+                    "person_position": "村支书",
+                    "person_phone_number": "13874723413",
+                    "person_belonging_organization": "宜新村"
+                }
+            }
+        ],
+        "isReservoirHazardPoint": [
+            {
+                "tail": "白牙水库",
+                "tail_type": "Reservoir",
+                "tail_properties": {
+                    "reservoir_name": "白牙水库",
+                    "reservoir_address": "湖南省永州市东安县白牙市镇"
+                }
+            }
+        ]
+    },
+    "Reservoir": {
+        "hasAdministrativeResponsiblePerson": [
+            {
+                "tail": "刘红霞",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "刘红霞",
+                    "person_role": "管理责任人",
+                    "person_position": "隐患点管理人员",
+                    "person_phone_number": "13637462720",
+                    "person_belonging_organization": "白牙市镇"
+                }
+            }
+        ],
+        "hasTechnicalResponsiblePerson": [
+            {
+                "tail": "陈仁红",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "陈仁红",
+                    "person_role": "技术责任人",
+                    "person_position": "管护员",
+                    "person_phone_number": "13973486781",
+                    "person_belonging_organization": "山水村"
+                }
+            }
+        ],
+        "hasManagementResponsiblePerson": [
+            {
+                "tail": "邓禄玉",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "邓禄玉",
+                    "person_role": "管理责任人",
+                    "person_position": "村支书",
+                    "person_phone_number": "13762967291",
+                    "person_belonging_organization": "石登村"
+                }
+            }
+        ],
+        "hasPatrolResponsiblePerson": [
+            {
+                "tail": "唐孟军",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "唐孟军",
+                    "person_role": "巡查责任人",
+                    "person_position": "村支书",
+                    "person_phone_number": "13874723413",
+                    "person_belonging_organization": "宜新村"
+                }
+            }
+        ]
+    },
+    "EmergencyMaterialWarehouse": {
+        "hasResponsiblePerson": [
+            {
+                "tail": "李付燕",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "李付燕",
+                    "person_role": "成员",
+                    "person_position": "应急办负责人",
+                    "person_phone_number": "18607497746",
+                    "person_belonging_organization": "应急局"
+                }
+            }
+        ]
+    },
+    "EmergencyMedicalSupply": {
+        "hasResponsiblePerson": [
+            {
+                "tail": "李付燕",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "李付燕",
+                    "person_role": "成员",
+                    "person_position": "应急办负责人",
+                    "person_phone_number": "18607497746",
+                    "person_belonging_organization": "应急局"
+                }
+            }
+        ]
+    },
+    "EmergencyRescueTeam": {
+        "hasResponsiblePerson": [
+            {
+                "tail": "李付燕",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "李付燕",
+                    "person_role": "成员",
+                    "person_position": "应急办负责人",
+                    "person_phone_number": "18607497746",
+                    "person_belonging_organization": "应急局"
+                }
+            }
+        ]
+    },
+    "EmergencyMaterialsAndEquipment": {
+        "hasResponsiblePerson": [
+            {
+                "tail": "李付燕",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "李付燕",
+                    "person_role": "成员",
+                    "person_position": "应急办负责人",
+                    "person_phone_number": "18607497746",
+                    "person_belonging_organization": "应急局"
+                }
+            }
+        ]
+    },
+    "ResponseActionOrganizingCommandItem": {
+        "hasWorkGroup": [
+            {
+                "tail": "综合协调组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "综合协调组",
+                    "work_group_duty": "负责接收上级命令指示，搜集雨情、水情、灾情、工情、险情等情况，实时掌握汛情动态、人员转移和救援进展情况，及时向上级部门报送相关情况，协调各方参加抢险救援工作，督促各村落实镇党委政府指挥决策",
+                    "work_group_member_introduction": "党政办、应急办、生态办、自然资源所工作人员"
+                }
+            },
+            {
+                "tail": "抢险救援组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "抢险救援组",
+                    "work_group_duty": "负责搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "work_group_member_introduction": "镇应急救援队、所在村、社区应急救援队和供电所人员"
+                }
+            },
+            {
+                "tail": "抢险救援组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "抢险救援组",
+                    "work_group_duty": "负责搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "work_group_member_introduction": "镇应急救援队、所在村、社区应急救援队和供电所人员"
+                }
+            },
+            {
+                "tail": "警戒疏散组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "警戒疏散组",
+                    "work_group_duty": "负责高风险点群众转移，负责低洼路段设置警示标志和交通管制，负责保障抢险救援道路畅通，引导救援力量进场",
+                    "work_group_member_introduction": "派出所干警、各村辅警"
+                }
+            },
+            {
+                "tail": "医疗救护组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "医疗救护组",
+                    "work_group_duty": "负责组织救护车辆、医务人员、急救药品、急救设施进入现场抢救、转运伤员和灾后的卫生消杀工作。",
+                    "work_group_member_introduction": "卫生院医务人员、所在村村医"
+                }
+            },
+            {
+                "tail": "后勤保障组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "后勤保障组",
+                    "work_group_duty": "负责应急避难场所搭建帐篷，提供电力、饮水、餐饮、交通工具，安置受灾人员，恢复生产等善后，为救援队伍和人员提供物资和生活保障",
+                    "work_group_member_introduction": "财政所、民政所、供电所人员"
+                }
+            }
+        ]
+    },
+    "ResponseActionEmergencyResponseAndRescueItem": {
+        "hasEmergencySupply": [
+            {
+                "tail": "镇应急物资库",
+                "tail_type": "EmergencyMaterialWarehouse",
+                "tail_properties": {
+                    "material_warehouse_name": "镇应急物资库",
+                    "material_warehouse_address": "东安县白牙市镇镇应急物资库",
+                    "material_warehouse_area_name": "东安县白牙市镇"
+                }
+            },
+            {
+                "tail": "白牙市卫生院",
+                "tail_type": "EmergencyMedicalSupply",
+                "tail_properties": {
+                    "medical_supply_unit_name": "白牙市卫生院",
+                    "medical_supply_area_name": "白牙市镇内",
+                    "medical_supply_main_material": "床位90张，心电监护仪1台、除颤仪1台、呼吸机1台，急救药品若干",
+                    "medical_supply_remark": "公益"
+                }
+            },
+            {
+                "tail": "白牙市镇综合应急队",
+                "tail_type": "EmergencyRescueTeam",
+                "tail_properties": {
+                    "rescue_team_name": "白牙市镇综合应急队",
+                    "rescue_team_area_name": "滑坡",
+                    "rescue_team_member_count": "56",
+                    "rescue_team_address": "白牙市镇政府",
+                    "rescue_team_phone_number": "0746-4212384"
+                }
+            },
+            {
+                "tail": "防暴头盔",
+                "tail_type": "EmergencyMaterialsAndEquipment",
+                "tail_properties": {
+                    "material_and_equipment_name": "防暴头盔",
+                    "material_and_equipment_type": "防恐防暴装备",
+                    "material_and_equipment_address": "白牙市镇应急物资库",
+                    "material_and_equipment_count": "20"
+                }
+            }
+        ]
+    },
+    "ResponseActionFloodControlWatchItem": {
+        "hasWorkGroup": [
+            {
+                "tail": "综合协调组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "综合协调组",
+                    "work_group_duty": "负责接收上级命令指示，搜集雨情、水情、灾情、工情、险情等情况，实时掌握汛情动态、人员转移和救援进展情况，及时向上级部门报送相关情况，协调各方参加抢险救援工作，督促各村落实镇党委政府指挥决策",
+                    "work_group_member_introduction": "党政办、应急办、生态办、自然资源所工作人员"
+                }
+            },
+            {
+                "tail": "抢险救援组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "抢险救援组",
+                    "work_group_duty": "负责搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "work_group_member_introduction": "镇应急救援队、所在村、社区应急救援队和供电所人员"
+                }
+            },
+            {
+                "tail": "抢险救援组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "抢险救援组",
+                    "work_group_duty": "负责搜救、转移遇险被困人员和重要物资，在确保安全的前提下排险、除险",
+                    "work_group_member_introduction": "镇应急救援队、所在村、社区应急救援队和供电所人员"
+                }
+            },
+            {
+                "tail": "警戒疏散组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "警戒疏散组",
+                    "work_group_duty": "负责高风险点群众转移，负责低洼路段设置警示标志和交通管制，负责保障抢险救援道路畅通，引导救援力量进场",
+                    "work_group_member_introduction": "派出所干警、各村辅警"
+                }
+            },
+            {
+                "tail": "医疗救护组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "医疗救护组",
+                    "work_group_duty": "负责组织救护车辆、医务人员、急救药品、急救设施进入现场抢救、转运伤员和灾后的卫生消杀工作。",
+                    "work_group_member_introduction": "卫生院医务人员、所在村村医"
+                }
+            },
+            {
+                "tail": "后勤保障组",
+                "tail_type": "WorkGroup",
+                "tail_properties": {
+                    "work_group_name": "后勤保障组",
+                    "work_group_duty": "负责应急避难场所搭建帐篷，提供电力、饮水、餐饮、交通工具，安置受灾人员，恢复生产等善后，为救援队伍和人员提供物资和生活保障",
+                    "work_group_member_introduction": "财政所、民政所、供电所人员"
+                }
+            }
+        ]
+    },
+    "ResponseActionRiskInspectionAndRemovalItem": {
+        "hasHazardPoint": [
+            {
+                "tail": "龙庭水岸滑坡",
+                "tail_type": "HazardPoint",
+                "tail_properties": {
+                    "hazard_point_name": "龙庭水岸滑坡",
+                    "hazard_point_type": "滑坡",
+                    "hazard_point_location": "苍子岭社区",
+                    "hazard_description": "影响人员住址龙庭水岸2栋1单元101"
+                }
+            },
+            {
+                "tail": "树德家园西面滑坡",
+                "tail_type": "HazardPoint",
+                "tail_properties": {
+                    "hazard_point_name": "树德家园西面滑坡",
+                    "hazard_point_type": "滑坡",
+                    "hazard_point_location": "苍子岭社区",
+                    "hazard_description": "影响人员住址树德家园7栋一单元601"
+                }
+            },
+            {
+                "tail": "宥江桥13组滑坡",
+                "tail_type": "HazardPoint",
+                "tail_properties": {
+                    "hazard_point_name": "宥江桥13组滑坡",
+                    "hazard_point_type": "滑坡",
+                    "hazard_point_location": "宥江桥村13组",
+                    "hazard_description": "影响人员住址宥江桥村13组邹礼祥屋后"
+                }
+            }
+        ]
+    },
+    "ResponseActionEvacuationAndResettlementItem": {
+        "hasFamilyHousehold": [
+            {
+                "tail": "李聪",
+                "tail_type": "FamilyHousehold",
+                "tail_properties": {
+                    "household_name": "李聪",
+                    "household_address": "龙庭水岸2栋1单元A101",
+                    "household_phone_number": "18821983205",
+                    "number_of_people": "3"
+                }
+            },
+            {
+                "tail": "唐路娥",
+                "tail_type": "FamilyHousehold",
+                "tail_properties": {
+                    "household_name": "唐路娥",
+                    "household_address": "龙庭水岸2栋1单元101",
+                    "household_phone_number": "15116525216",
+                    "number_of_people": "1"
+                }
+            }
+        ]
+    },
+    "ThreeTierPackage": {
+        "villageLeader": [
+            {
+                "tail": "王燕",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "王燕",
+                    "person_phone_number": "18821983205",
+                    "person_role": "村(社区)级责任人",
+                    "person_position": "应急办负责人",
+                    "person_belonging_organization": "应急局"
+                }
+            }
+        ],
+        "townLeader": [
+            {
+                "tail": "赵六",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "赵六",
+                    "person_phone_number": "18821983205",
+                    "person_role": "乡镇（街道）级责任人",
+                    "person_position": "应急办负责人",
+                    "person_belonging_organization": "应急局"
+                }
+            }
+        ],
+        "countyLeader": [
+            {
+                "tail": "李四",
+                "tail_type": "Person",
+                "tail_properties": {
+                    "person_name": "李四",
+                    "person_phone_number": "18821983205",
+                    "person_role": "县市区级责任人",
+                    "person_position": "应急办负责人",
+                    "person_belonging_organization": "应急局"
+                }
+            }
+        ]
+    }
+}

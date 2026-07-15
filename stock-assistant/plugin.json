@@ -1,0 +1,9 @@
+{
+  "name": "stock-assistant",
+  "version": "1.0.0",
+  "description": "股票信息原子能力 Skill - 行情、序列、指标、Kimi search/fetch",
+  "config_file": "config.json",
+  "inject": {
+    "kimiPluginAPIKey": "api_key"
+  }
+}

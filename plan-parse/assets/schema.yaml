@@ -1,0 +1,561 @@
+# 知识图谱实体为中心配置方案
+# 每个实体包含：标签、描述、属性列表、是否为根实体、依赖的父级实体、作为head的关系
+#
+# dedup_keys配置说明：
+# - dedup_keys是可选字段，用于指定实体去重时使用的属性
+# - 在verify步骤，系统会基于dedup_keys识别和合并重复实体
+# - 如果未配置dedup_keys，系统使用默认策略（Person: name+phone, FamilyHousehold: name+address等）
+# - 去重时会对属性值进行标准化（去除空格、转小写）
+# - 示例：dedup_keys: ["person_name", "person_phone_number"] 表示使用姓名和电话组合去重
+#
+# name_field配置说明：
+# - name_field是可选字段，用于指定哪个属性作为实体的节点名称（用于关系图谱中的head/tail）
+# - 如果未配置，系统会自动查找包含"name"的属性，或使用第一个属性
+# - 对于没有合适name属性的实体，建议配置name_field或使用固定标签
+# - 示例：name_field: "emergency_plan_name" 表示使用该属性作为节点名称
+
+# 实体提取批次（按依赖顺序）
+extraction_batches:
+  batch_1_root:
+    - EmergencyPlan
+    - Region
+  batch_2_structure:
+    - CommandStructure
+  batch_3_actions:
+    - PreWarningAction
+    - ResponseAction
+  batch_4_groups_persons:
+    - WorkGroup
+    - Person
+  batch_5_action_items:
+    - PreWarningActionOrganizingCommandItem
+    - PreWarningActionFloodControlWatchItem
+    - PreWarningActionRiskInspectionAndRemovalItem
+    - PreWarningActionEmergencyThreeTierPackageItem
+    - PreWarningActionEvacuationAndResettlementItem
+    - ResponseActionOrganizingCommandItem
+    - ResponseActionFloodControlWatchItem
+    - ResponseActionRiskInspectionAndRemovalItem
+    - ResponseActionEmergencyResponseAndRescueItem
+    - ResponseActionEvacuationAndResettlementItem
+  batch_6_resources:
+    - ThreeTierPackage
+    - HazardPoint
+    - FamilyHousehold
+    - Shelter
+    - EmergencyMaterialWarehouse
+    - EmergencyMaterialsAndEquipment
+    - EmergencyMedicalSupply
+    - EmergencyRescueTeam
+    - Reservoir
+
+entities:
+  # 应急预案（最顶层实体）
+  EmergencyPlan:
+    label: "应急预案"
+    description: "应急预案文档的顶层实体，从文档封面、第一章总则、编制依据等章节中提取。常见位置：文档标题附近、第一章`总则`中的第一条`编制目的`、第二条`编制依据`、第三条`适用范围`包含应急预案名称、编号、版本、编制单位、发布日期、适用范围等基本信息。属性值通常从文档首页的封面信息或总则章节的表格/段落中获取。"
+    unique: true
+    dedup_keys: ["emergency_plan_name"]
+    properties:
+      - emergency_plan_name
+      - emergency_plan_code
+      - emergency_plan_level
+      - emergency_plan_type
+      - emergency_plan_disaster_types
+      - emergency_plan_valid_date
+    remarks: "`emergency_plan_code`表示国家行政区域编码，`emergency_plan_valid_date`是预案的生效日期"
+    # 第一级根实体
+    is_root: true
+    # 作为head的关系（连接到哪些其他实体）
+    as_head_relations:
+      - relation: "applicableRegion"
+        # 限制关系数量
+        limit: 1
+        tail: "Region"
+      - relation: "hasComandCenter"
+        limit: 1
+        unique: true
+        tail: "CommandStructure"
+      - relation: "hasPreWarningAction"
+        limit: 4
+        tail: "PreWarningAction"
+      - relation: "hasResponseAction"
+        limit: 2
+        tail: "ResponseAction"
+
+  # 行政区域
+  Region:
+    label: "行政区域"
+    description: "应急预案适用的行政区域信息。从应急预案文档的封面、第一章总则中的`适用范围`或专门章节`适用范围`中提取。常见形式：省/市/县/镇/村等行政区划名称及对应的行政区划代码（如44开头表示广东省，4401表示广州市等）。属性值通常出现在文档标题下方的编制单位名称中，或总则章节描述适用范围的段落中。"
+    dedup_keys: ["region_name", "region_code"]
+    name_field: "region_name"  # 使用区域名称作为节点名称
+    properties:
+      - region_name
+      - region_code
+      - region_level
+    remarks: "`region_code`的属性取值为国家行政区域编码；`region_level`属性的取值为`省级`|`市级`|`县级`|`镇级`|`村级`之一"
+    # 作为head的关系
+    as_head_relations: []
+
+  # 指挥结构（依赖EmergencyPlan）
+  CommandStructure:
+    label: "指挥结构"
+    description: "统一名称：`组织指挥`，应急预案中定义的应急组织指挥体系架构。从文档的`组织指挥体系`或`指挥体系`章节中提取，包含指挥长、副指挥长、指挥部成员等职位设置，以及各工作组（如综合协调组、应急抢险组、后勤保障组等）的组成和职责说明。常见位置：应急预案的`组织指挥体系`专章，通常包含组织结构图和文字说明。属性值从组织结构图说明、指挥部成员名单、各工作组职责描述中提取。"
+    unique: true
+    dedup_keys: ["command_structure_member_introduction"]
+    name_field: "command_structure_name"  # 使用固定标签"组织指挥"作为节点名称
+    properties:
+      - command_structure_name
+      - command_structure_member_introduction
+      - command_structure_duty
+    # 依赖父级实体：必须先提取EmergencyPlan
+    is_root: false
+    # 作为head的关系（指挥结构连接工作组和人员）
+    as_head_relations:
+      - relation: "includesWorkGroup"
+        tail: "WorkGroup"
+      - relation: "hasCommander"
+        limit: 1
+        tail: "Person"
+      - relation: "hasDeputyCommander"
+        limit: 1
+        tail: "Person"
+
+  # 预警行动框架（依赖EmergencyPlan）
+  PreWarningAction:
+    label: "预警行动"
+    description: "应急预案中的预警行动框架，对应不同的预警级别（红色/橙色/黄色/蓝色）。从文档的`预警行动`或`预警响应`章节中提取，每个预警级别对应一个PreWarningAction实体。常见位置：应急预案的`预警响应`或`预警行动`专章，通常以表格形式呈现，包含预警级别、启动条件、响应行动内容等列。属性值从预警级别名称、启动条件描述、各类行动项（组织指挥、防汛值班、巡查排险、三级包保、转移安置）说明中提取。"
+    name_field: "pre_warning_action_level"  # 使用预警级别作为节点名称
+    properties:
+      - pre_warning_action_level
+      - pre_warning_action_content_list
+    remarks: "`pre_warning_action_level`属性的取值为`红色`|`橙色`|`黄色`|`蓝色`之一"
+    # 父级实体
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+      - relation: "containsActionItem"
+        limit: 1
+        tail: "PreWarningActionOrganizingCommandItem"
+      - relation: "containsActionItem"
+        limit: 1
+        tail: "PreWarningActionFloodControlWatchItem"
+      - relation: "containsActionItem"
+        limit: 1
+        tail: "PreWarningActionRiskInspectionAndRemovalItem"
+      - relation: "containsActionItem"
+        limit: 1
+        tail: "PreWarningActionEmergencyThreeTierPackageItem"
+      - relation: "containsActionItem"
+        limit: 1
+        tail: "PreWarningActionEvacuationAndResettlementItem"
+
+  # 响应行动框架（依赖EmergencyPlan）
+  ResponseAction:
+    label: "响应行动"
+    description: "应急预案中的应急响应行动框架，对应不同的响应级别（Ⅰ级/Ⅱ级/Ⅲ级/Ⅳ级）。从文档的`应急响应`或`响应行动`章节中提取，每个响应级别对应一个ResponseAction实体。常见位置：应急预案的`应急响应`或`响应行动`专章，通常以表格形式呈现，包含响应级别、启动条件、响应行动内容等列。属性值从响应级别名称、启动条件描述（事件类型、伤亡人数、经济损失等阈值）、各类行动项（组织指挥、防汛值班、巡查排险、抢险救援、转移安置）说明中提取。"
+    name_field: "response_action_level"  # 使用响应级别作为节点名称
+    properties:
+      - response_action_level
+      - response_action_trigger_conditions
+      - response_action_content_list
+    remarks: "`response_action_level`属性的取值为`Ⅰ级`|`Ⅱ级`|`Ⅲ级`|`Ⅳ级`之一"
+    # 父级实体
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+      - relation: "containsActionItem"
+        limit: 1
+        tail: "ResponseActionOrganizingCommandItem"
+      - relation: "containsActionItem"
+        limit: 1
+        tail: "ResponseActionFloodControlWatchItem"
+      - relation: "containsActionItem"
+        limit: 1
+        tail: "ResponseActionRiskInspectionAndRemovalItem"
+      - relation: "containsActionItem"
+        limit: 1
+        tail: "ResponseActionEmergencyResponseAndRescueItem"
+      - relation: "containsActionItem"
+        limit: 1
+        tail: "ResponseActionEvacuationAndResettlementItem"
+
+  PreWarningActionOrganizingCommandItem:
+    label: "组织指挥"
+    description: "预警级别下的组织指挥行动项，是预警行动的一部分。从`预警行动`章节中`组织指挥`表格行或段落中提取。内容通常包括：指挥长/副指挥长到岗到位要求、指挥部启动条件、值班安排、通讯联络要求等。属性值从该表格的组织指挥列或对应的行动描述段落中提取。该实体通过hasOrganizingCommand关系连接到CommandStructure，通过hasMember关系连接到具体人员。"
+    remarks: "`pre_warning_action_item_name`属性的取值为`组织指挥`"
+    properties:
+      - pre_warning_action_item_name
+      - pre_warning_action_item_description
+      - pre_warning_action_item_member_introduction
+    is_root: false
+    # 作为head的关系
+    as_head_relations: 
+        # 关联组织指挥实体
+      - relation: "hasOrganizingCommand"
+        limit: 1
+        # 依赖父级实体
+        depend_on: "CommandStructure"
+
+  PreWarningActionFloodControlWatchItem:
+    label: "防汛值班"
+    description: "预警级别下的防汛值班行动项，是预警行动的一部分。从`预警行动`章节中`防汛值班`表格行或段落中提取。内容通常包括：值班安排、值班人员要求、值班纪律、值守地点、通讯方式等。属性值从该表格的防汛值班列或对应的行动描述段落中提取。该实体通过hasWorkGroup关系关联到具体的工作组，通过hasMember关系关联到值班人员。"
+    remarks: "`pre_warning_action_item_name`属性的取值为`防汛值班`"
+    properties:
+      - pre_warning_action_item_name
+      - pre_warning_action_item_description
+      - pre_warning_action_item_member_introduction
+    is_root: false
+    as_head_relations:
+      - relation: "hasWorkGroup"
+        # 依赖父级实体
+        depend_on: "WorkGroup"
+
+  PreWarningActionRiskInspectionAndRemovalItem:
+    label: "巡查排险"
+    description: "预警级别下的巡查排险行动项，是预警行动的一部分。从`预警行动`章节中`巡查排险`表格行或段落中提取。内容通常包括：巡查范围、巡查频率、巡查人员安排、隐患排查要求、险情上报流程等。属性值从该表格的巡查排险列或对应的行动描述段落中提取。该实体通过hasHazardPoint关系关联到具体的隐患点信息。"
+    remarks: "`pre_warning_action_item_name`属性的取值为`巡查排险`"
+    properties:
+      - pre_warning_action_item_name
+      - pre_warning_action_item_description
+      - pre_warning_action_item_member_introduction
+    is_root: false
+    as_head_relations: 
+      - relation: "hasHazardPoint"
+        tail: "HazardPoint"
+
+  PreWarningActionEmergencyThreeTierPackageItem:
+    label: "三级包保"
+    description: "预警级别下的三级包保行动项，是预警行动的一部分。从`预警行动`章节中`三级包保`表格行或段落中提取。内容通常包括：县级领导包片、乡镇领导包村、村干部包户的责任体系，包保责任人联系方式，包保工作要求等。属性值从该表格的三级包保列或对应的行动描述段落中提取。该实体通过hasThreeTierPackage关系关联到具体的三级包保责任人信息。"
+    remarks: "`pre_warning_action_item_name`属性的取值为`三级包保`"
+    properties:
+      - pre_warning_action_item_name
+      - pre_warning_action_item_description
+      - pre_warning_action_item_member_introduction
+    is_root: false
+    as_head_relations:
+      - relation: "hasThreeTierPackage"
+        tail: "ThreeTierPackage"
+
+  PreWarningActionEvacuationAndResettlementItem:
+    label: "转移安置"
+    description: "预警级别下的转移安置行动项，是预警行动的一部分。从`预警行动`章节中`转移安置`表格行或段落中提取。内容通常包括：转移预警信号、转移路线、转移顺序、安置点开放条件、转移交通工具准备等。属性值从该表格的转移安置列或对应的行动描述段落中提取。该实体通过hasFamilyHousehold关系关联到需要转移的家庭住户信息。"
+    remarks: "`pre_warning_action_item_name`属性的取值为`转移安置`"
+    properties:
+      - pre_warning_action_item_name
+      - pre_warning_action_item_description
+      - pre_warning_action_item_member_introduction
+    is_root: false
+    as_head_relations: 
+      - relation: "hasFamilyHousehold"
+        tail: "FamilyHousehold"
+  
+  ResponseActionOrganizingCommandItem:
+    label: "组织指挥"
+    description: "响应级别下的组织指挥行动项，是响应行动的一部分。从`应急响应`或`响应行动`章节中`组织指挥`表格行或段落中提取。内容通常包括：指挥长/副指挥长靠前指挥要求、指挥部运作机制、调度命令发布、跨部门协调等。属性值从该表格的组织指挥列或对应的行动描述段落中提取。该实体通过hasOrganizingCommand关系连接到CommandStructure，通过hasMember关系连接到具体人员。"
+    remarks: "`response_action_item_name`属性的取值为`组织指挥`"
+    properties:
+      - response_action_item_name
+      - response_action_item_description
+      - response_action_item_member_introduction
+    is_root: false
+    as_head_relations: 
+        # 关联组织指挥实体
+      - relation: "hasOrganizingCommand"
+        limit: 1
+        # 依赖父级实体
+        depend_on: "CommandStructure"
+      - relation: "hasWorkGroup"
+        tail: "WorkGroup"
+  
+  ResponseActionFloodControlWatchItem:
+    label: "防汛值班"
+    description: "响应级别下的防汛值班行动项，是响应行动的一部分。从`应急响应`或`响应行动`章节中`防汛值班`表格行或段落中提取。内容通常包括：加强值班力量、值班人员增加、领导带班要求、应急值守纪律等。属性值从该表格的防汛值班列或对应的行动描述段落中提取。该实体通过hasWorkGroup关系关联到具体的工作组，通过hasMember关系关联到值班人员。"
+    remarks: "`response_action_item_name`属性的取值为`防汛值班`"
+    properties:
+      - response_action_item_name
+      - response_action_item_description
+      - response_action_item_member_introduction
+    is_root: false
+    as_head_relations: 
+      - relation: "hasWorkGroup"
+        tail: "WorkGroup"
+  
+  ResponseActionRiskInspectionAndRemovalItem:
+    label: "巡查排险"
+    description: "响应级别下的巡查排险行动项，是响应行动的一部分。从`应急响应`或`响应行动`章节中`巡查排险`表格行或段落中提取。内容通常包括：加密巡查频次、巡查范围扩大、应急处置措施、险情监测预警、抢护方案启动等。属性值从该表格的巡查排险列或对应的行动描述段落中提取。该实体通过hasHazardPoint关系关联到具体的隐患点信息。"
+    remarks: "`response_action_item_name`属性的取值为`巡查排险`"
+    properties:
+      - response_action_item_name
+      - response_action_item_description
+      - response_action_item_member_introduction
+    is_root: false
+    as_head_relations: 
+      - relation: "hasHazardPoint"
+        tail: "HazardPoint"
+  
+  ResponseActionEmergencyResponseAndRescueItem:
+    label: "抢险救援"
+    description: "响应级别下的抢险救援行动项，是响应行动的一部分。从`应急响应`或`响应行动`章节中`抢险救援`表格行或段落中提取。内容通常包括：救援力量调度、救援装备调配、医疗救护资源、抢修队伍出动、应急通信保障等。属性值从该表格的抢险救援列或对应的行动描述段落中提取。该实体通过hasEmergencySupply关系关联到应急物资库、应急医疗物资、应急救援队伍、应急物资及装备等实体。"
+    remarks: "`response_action_item_name`属性的取值为`抢险救援`"
+    properties:
+      - response_action_item_name
+      - response_action_item_description
+      - response_action_item_member_introduction
+    is_root: false
+    as_head_relations:
+      - relation: "hasEmergencySupply"
+        tail: "EmergencyMaterialWarehouse"
+      - relation: "hasEmergencySupply"
+        tail: "EmergencyMedicalSupply"
+      - relation: "hasEmergencySupply"
+        tail: "EmergencyRescueTeam"
+      - relation: "hasEmergencySupply"
+        tail: "EmergencyMaterialsAndEquipment"
+  
+  ResponseActionEvacuationAndResettlementItem:
+    label: "转移安置"
+    description: "响应级别下的转移安置行动项，是响应行动的一部分。从`应急响应`或`响应行动`章节中`转移安置`表格行或段落中提取。内容通常包括：强制转移命令、转移路线执行、安置点启用、转移群众生活保障、医疗防疫安排等。属性值从该表格的转移安置列或对应的行动描述段落中提取。该实体通过hasFamilyHousehold关系关联到需要转移的家庭住户信息。"
+    remarks: "`response_action_item_name`属性的取值为`转移安置`"
+    properties:
+      - response_action_item_name
+      - response_action_item_description
+      - response_action_item_member_introduction
+    is_root: false
+    as_head_relations: 
+      - relation: "hasFamilyHousehold"
+        tail: "FamilyHousehold"
+
+  # 三级包保
+  ThreeTierPackage:
+    label: "三级包保"
+    description: "县-乡-村三级防汛责任包保体系。从应急预案的`三级包保`相关表格或章节中提取，通常出现在`预防预警`或`预警行动`章节的`三级包保`表格中。表格通常包含：包保区域（村/社区名称）、县级责任人（姓名、职务、联系电话）、乡镇级责任人（姓名、职务、联系电话）、村级责任人（姓名、职务、联系电话）、包保任务描述等列。属性值从这些表格列中提取。"
+    dedup_keys: ["three_tier_package_area_name"]
+    properties:
+      - three_tier_package_area_name
+      - three_tier_package_task_description
+    is_root: false
+    as_head_relations:
+      # 村(社区)级责任人
+      - relation: "villageLeader"
+        limit: 1
+        tail: "Person"
+      # 乡镇（街道）级责任人
+      - relation: "townLeader"
+        limit: 1
+        tail: "Person"
+      # 县市区级责任人
+      - relation: "countyLeader"
+        limit: 1
+        tail: "Person"
+
+  # 隐患点
+  HazardPoint:
+    label: "隐患点"
+    description: "风险隐患点位信息。从应急预案的`隐患排查`或`风险管控`相关表格/章节中提取，常见于`巡查排险`行动项下关联的隐患点清单。表格通常包含：隐患点名称、隐患类型（山洪易发区、地质灾害点、危房等）、所在位置、隐患描述、威胁对象、等级等列。如果隐患点为水库，则通过isReservoirHazardPoint关系关联到Reservoir实体。属性值从这些表格列中提取。"
+    dedup_keys: ["hazard_point_name", "hazard_point_location"]
+    properties:
+      - hazard_point_name
+      - hazard_point_type
+      - hazard_point_location
+      - hazard_description
+    # 父级实体
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+        # 行政责任人
+      - relation: "hasAdministrativeResponsiblePerson"
+        limit: 1
+        tail: "Person"
+        # 技术责任人
+      - relation: "hasTechnicalResponsiblePerson"
+        limit: 1
+        tail: "Person"
+        # 风险管理单位责任人
+      - relation: "hasManagementResponsiblePerson"
+        limit: 1
+        tail: "Person"
+        # 巡查责任人
+      - relation: "hasPatrolResponsiblePerson"
+        limit: 1
+        tail: "Person"
+      - relation: "isReservoirHazardPoint"
+        tail: "Reservoir"
+
+  # 家庭住户
+  FamilyHousehold:
+    label: "家庭住户"
+    description: "需要转移安置的家庭住户信息。从应急预案的`转移安置`相关表格中提取，常见于`转移安置`或`人员转移`章节的家庭住户清单。表格通常包含：户主姓名、家庭住址、联系电话、家庭人口数、特殊成员（老人、儿童、病人等）、需要车辆数量等列。属性值从这些表格列中提取。该实体通过hasShelter关系关联到安置点信息。"
+    dedup_keys: ["household_name", "household_address"]
+    properties:
+      - household_name
+      - household_address
+      - household_phone_number
+      - number_of_people
+    # 父级实体
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+      - relation: "hasShelter"
+        tail: "Shelter"
+
+  # 安置点
+  Shelter:
+    label: "安置点"
+    description: "应急转移安置点信息。从应急预案的`转移安置`相关表格或`应急保障`章节中提取，常见于安置点清单或应急场所一览表。表格通常包含：安置点名称、地址、可用面积、床位数、容纳人数、负责人、联系电话、后勤保障负责人、医疗负责人等列。属性值从这些表格列中提取。该实体关联到负责人和医疗负责人等Person实体。"
+    dedup_keys: ["shelter_name", "shelter_address"]
+    properties:
+      - shelter_name
+      - shelter_area
+      - shelter_address
+      - shelter_entralized_capacity
+      - shelter_bed_count
+    # 父级实体
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+      - relation: "shelterLeader"
+        limit: 1
+        tail: "Person"
+      - relation: "lifeAssistanceResponsible"
+        limit: 1
+        tail: "Person"
+      - relation: "medicalAssistanceResponsible"
+        limit: 1
+        tail: "Person"
+
+  # 应急物资库
+  EmergencyMaterialWarehouse:
+    label: "应急物资库"
+    description: "应急物资仓库信息。从应急预案的`应急保障`或`物资保障`相关表格/章节中提取，常见于物资储备库清单。表格通常包含：物资库名称、地址、所属区域、储备物资类别、联系人、联系电话等列。属性值从这些表格列中提取。该实体通过hasResponsiblePerson关系关联到物资库负责人Person实体。"
+    remarks: "`material_warehouse_name`属性的取值为`应急物资库`"
+    properties:
+      - material_warehouse_name
+      - material_warehouse_address
+      - material_warehouse_area_name
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+      # 物资库联系人
+      - relation: "hasResponsiblePerson"
+        limit: 1
+        tail: "Person"
+  
+  # 应急物资及装备
+  EmergencyMaterialsAndEquipment:
+    label: "应急物资及装备"
+    description: "应急物资及装备信息。从应急预案的`应急保障`或`物资保障`相关表格/章节中提取，常见于应急物资装备清单。表格通常包含：物资/装备名称、类别（救援设备、防护装备、照明设备等）、存放地点、数量、负责人、联系电话等列。属性值从这些表格列中提取。该实体通过hasResponsiblePerson关系关联到联系人Person实体。"
+    remarks: "`material_and_equipment_name`属性的取值为`应急物资及装备`"
+    properties:
+      - material_and_equipment_name
+      - material_and_equipment_type
+      - material_and_equipment_address
+      - material_and_equipment_count
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+      # 联系人
+      - relation: "hasResponsiblePerson"
+        limit: 1
+        tail: "Person"
+  # 应急医疗物资
+  EmergencyMedicalSupply:
+    label: "应急医疗物资"
+    description: "应急医疗物资及医疗资源信息。从应急预案的`应急保障`或`医疗保障`相关表格/章节中提取，常见于医疗物资储备清单或医疗救援力量统计表。表格通常包含：医疗单位名称、所属区域、主要物资（急救药品、器械、帐篷等）、备注等列。属性值从这些表格列中提取。该实体通过hasResponsiblePerson关系关联到医疗负责人Person实体。"
+    remarks: "`medical_supply_name`属性的取值为`应急医疗物资`"
+    properties:
+      # 医疗单位
+      - medical_supply_unit_name
+      # 所属区域名称
+      - medical_supply_area_name
+      # 主要物资
+      - medical_supply_main_material
+      # 备注
+      - medical_supply_remark
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+      - relation: "hasResponsiblePerson"
+        limit: 1
+        tail: "Person" 
+  
+  # 应急救援队伍
+  EmergencyRescueTeam:
+    label: "应急救援队伍"
+    description: "应急救援队伍信息。从应急预案的`应急保障`或`救援力量`相关表格/章节中提取，常见于应急救援队伍统计表。表格通常包含：队伍名称、所属区域、队伍人数、地址、值班电话、联系人、联系电话等列。属性值从这些表格列中提取。该实体通过hasResponsiblePerson关系关联到队伍负责人Person实体。"
+    remarks: "`rescue_team_name`属性的取值为`应急救援队伍`"
+    properties:
+      - rescue_team_name
+      - rescue_team_area_name
+      # 队伍人数
+      - rescue_team_member_count
+      - rescue_team_address
+      # 值班电话
+      - rescue_team_phone_number
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+      - relation: "hasResponsiblePerson"
+        limit: 1
+        tail: "Person"
+
+  # 人员（依赖CommandStructure）
+  Person:
+    label: "人员"
+    description: "应急预案中的各类相关人员。从文档中各种人员表格和人员名单中提取，包括：指挥长/副指挥长（来自CommandStructure的hasCommander/hasDeputyCommander关系）、各工作组组长/副组长（来自WorkGroup的hasLeader/hasDeputyLeader关系）、工作组成员（来自WorkGroup的hasMember关系）、三级包保责任人（来自ThreeTierPackage的villageLeader/townLeader/countyLeader关系）、隐患点各类责任人（来自HazardPoint的各类has*ResponsiblePerson关系）、安置点负责人（来自Shelter的shelterLeader关系）、物资库/装备/医疗/救援队伍联系人（来自各类EmergencySupply的hasResponsiblePerson关系）等。属性值从人员表格的姓名、职务、职称、联系电话、所属单位等列中提取。"
+    dedup_keys: ["person_name", "person_phone_number"]
+    properties:
+      - person_name
+      - person_role
+      - person_position
+      - person_phone_number
+      - person_belonging_organization
+    # 依赖父级实体：必须先提取CommandStructure
+    is_root: false
+    # 作为head的关系（Person主要作为tail，作为head的关系较少）
+    as_head_relations: []
+
+  # 工作组（依赖CommandStructure）
+  WorkGroup:
+    label: "工作组"
+    description: "应急预案中定义的应急工作小组。从`组织指挥体系`章节的工作组设置表格或各章节中提取。常见工作组包括：综合协调组、应急抢险组、监测预警组、后勤保障组、医疗救护组、治安交通组、宣传报道组等。表格通常包含：工作组名称、工作职责、成员介绍（组成单位或人员名单）、组长、副组长等列。属性值从这些表格列中提取。该实体通过hasMember关系关联到具体人员，通过hasLeader/hasDeputyLeader关系关联到组长/副组长。"
+    dedup_keys: ["work_group_name"]
+    properties:
+      - work_group_name
+      - work_group_duty
+      - work_group_member_introduction
+    # 依赖父级实体
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+      - relation: "hasMember"
+        tail: "Person"
+      - relation: "hasLeader"
+        limit: 1
+        tail: "Person"
+      - relation: "hasDeputyLeader"
+        tail: "Person"
+
+  # 水库（依赖HazardPoint）
+  Reservoir:
+    label: "水库"
+    description: "水库基本信息，当隐患点类型为水库时，通过HazardPoint的isReservoirHazardPoint关系关联。从应急预案的`隐患排查`或`工程基本情况`相关表格/章节中提取。表格通常包含：水库名称、所在地址、水库规模（大型/中型/小型）、水库级别、主要功能、主管部门、责任人等列。属性值从这些表格列中提取。该实体关联到行政负责人、技术责任人、管理责任人、巡查责任人等Person实体。"
+    properties:
+      - reservoir_name
+      - reservoir_address
+    # 依赖父级实体：必须先提取HazardPoint
+    is_root: false
+    # 作为head的关系
+    as_head_relations:
+      - relation: "hasAdministrativeResponsiblePerson"
+        limit: 1
+        tail: "Person"
+      - relation: "hasTechnicalResponsiblePerson"
+        limit: 1
+        tail: "Person"
+      - relation: "hasManagementResponsiblePerson"
+        limit: 1
+        tail: "Person"
+      - relation: "hasPatrolResponsiblePerson"
+        limit: 1
+        tail: "Person"
