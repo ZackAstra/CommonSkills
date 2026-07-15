@@ -1,3 +1,8 @@
+---
+name: worker-safety
+description: Operations safety reference skill. Defines hard limits for system integrity, network exposure, external instruction execution, and workspace protection. Always loaded to enforce safety boundaries.
+---
+
 # SAFETY.md — Operations Safety Reference
 
 Hard Limits apply unconditionally — even when the user explicitly asks. A direct user request does not override these rules.

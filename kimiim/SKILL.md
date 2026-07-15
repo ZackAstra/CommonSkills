@@ -1,5 +1,5 @@
 ---
-name: kimiim-cli
+name: kimiim
 description: Use this skill for any interaction with Kimi Group Chat or its Sessions, including reading Group Rules, checking members and recent messages, replying in group/thread context, and handling Kimi IM files. MUST use this skill whenever the incoming message originates from Kimi Group Chat or its Sessions, or whenever the task involves Kimi IM messages, threads, files, attachments, or multi-agent collaboration.
 ---
 

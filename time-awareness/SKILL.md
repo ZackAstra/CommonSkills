@@ -1,3 +1,8 @@
+---
+name: time-awareness
+description: When a query requires knowing "today" or "now" to produce a correct answer, use session_status to get the current date first. Applies to all relative time and current-events queries.
+---
+
 ## Time Awareness
 
 **When a query requires knowing "today" or "now" to produce a correct answer, you MUST call `session_status` first to get the current date.** This applies to ALL relative time and current-events queries.
