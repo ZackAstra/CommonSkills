@@ -324,6 +324,13 @@ Kimi 客户端打包了 34 个内置技能（`builtin-skills`），位于：
 | 版本 | 日期 | 变更 |
 |------|------|------|
 | 1.0.0 | 2026-07-15 | 初始建立，支持 Kimi/Cursor/Codex/Trae/Qoder 双通道同步 |
+| 1.0.1 | 2026-07-15 | docs: 明确同步范围仅限 Kimi Work 模式，Chat 模式不受影响 |
+| 1.0.2 | 2026-07-15 | docs: 完全移除 Chat 模式引用，同步范围精确为 Kimi Work + Kimi Code IDE |
+| 1.0.3 | 2026-07-15 | fix: 删除技能目录速查表中的重复 Kimi Code IDE 行 |
+| 1.1.0 | 2026-07-15 | fix: 修复 5 个技能的前置元数据（time-awareness、worker-safety 补充 frontmatter；gongkao-review-allinone、kimi-webbridge-desktop、kimiim 修正 name 与目录名不匹配） |
+| 1.1.1 | 2026-07-15 | fix: 移除同步脚本中的 Chat 模式残留引用；修复时间戳比较逻辑（目录级 → SKILL.md 文件级） |
+| 1.1.2 | 2026-07-15 | fix: 修正技能总数 64 → 62；更新 git hooks 到最新同步脚本版本 |
+| 1.1.3 | 2026-07-15 | docs: 新增完整复盘验证报告 `_FINAL_VERIFICATION_REPORT.md` |
 
 ---
 
