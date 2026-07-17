@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fireworks Tech Graph"
+  short_description: "Generate geometry-safe technical diagrams"
+  default_prompt: "Use $fireworks-tech-graph to turn the user's system or workflow description into a geometry-checked SVG, then export PNG or offline interactive HTML when useful."
