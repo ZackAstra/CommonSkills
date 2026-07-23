@@ -1,6 +1,6 @@
----
+﻿---
 name: baoyu-diagram
-description: Create professional, dark-themed SVG diagrams of any type — architecture diagrams, flowcharts, sequence diagrams, structural diagrams, mind maps, timelines, illustrative/conceptual diagrams, and more. Use this skill whenever the user asks for any kind of technical or conceptual diagram, visualization of a system, process flow, data flow, component relationship, network topology, decision tree, org chart, state machine, or any visual representation of structure/logic/process. Also trigger when the user says "画个图" "画一个架构图" "diagram" "flowchart" "sequence diagram" "draw me a ..." or uploads content and asks to visualize it. Output is always a standalone .svg file.
+description: Create professional, dark-themed SVG diagrams of any type 鈥?architecture diagrams, flowcharts, sequence diagrams, structural diagrams, mind maps, timelines, illustrative/conceptual diagrams, and more. Use this skill whenever the user asks for any kind of technical or conceptual diagram, visualization of a system, process flow, data flow, component relationship, network topology, decision tree, org chart, state machine, or any visual representation of structure/logic/process. Also trigger when the user says "鐢讳釜鍥? "鐢讳竴涓灦鏋勫浘" "diagram" "flowchart" "sequence diagram" "draw me a ..." or uploads content and asks to visualize it. Output is always a standalone .svg file.
 version: 1.117.3
 ---
 
@@ -79,7 +79,7 @@ Font sizes by role:
 </marker>
 ```
 
-**Arrowhead marker (colored) — create per-color as needed:**
+**Arrowhead marker (colored) 鈥?create per-color as needed:**
 ```svg
 <marker id="arrow-cyan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
   <polygon points="0 0, 10 3.5, 0 7" fill="#22d3ee"/>
@@ -106,7 +106,7 @@ Draw elements in this order to get correct z-ordering (SVG paints back-to-front)
 7. Legend (bottom-right or bottom area, outside all boundaries)
 8. Title block (top-left)
 
-The opaque masking rect trick is essential — semi-transparent component fills will show arrows underneath without it:
+The opaque masking rect trick is essential 鈥?semi-transparent component fills will show arrows underneath without it:
 ```svg
 <!-- Mask layer: opaque background to hide arrows -->
 <rect x="100" y="100" width="160" height="60" rx="6" fill="#0f172a"/>
@@ -118,7 +118,7 @@ The opaque masking rect trick is essential — semi-transparent component fills 
 
 ### Spacing Rules
 
-These prevent overlapping — follow them strictly:
+These prevent overlapping 鈥?follow them strictly:
 
 - **Component box height:** 50-70px (standard), 80-120px (large/complex)
 - **Minimum gap between components:** 40px vertical, 30px horizontal
@@ -179,22 +179,22 @@ These prevent overlapping — follow them strictly:
 Determine this SKILL.md file's directory path as `{baseDir}`. Read the reference file for the specific diagram type before starting layout. Reference files are located at `{baseDir}/references/` and contain detailed layout algorithms and examples.
 
 ### Architecture Diagrams
-→ Read `{baseDir}/references/architecture.md`
+鈫?Read `{baseDir}/references/architecture.md`
 
 Key points: left-to-right or top-to-bottom data flow. Group related services in region boundaries. Use buses/connectors between layers. Place databases at the bottom or right.
 
 ### Flowcharts
-→ Read `{baseDir}/references/flowchart.md`
+鈫?Read `{baseDir}/references/flowchart.md`
 
 Key points: top-to-bottom primary flow. Diamonds for decisions with Yes/No labels on exit arrows. Rounded rectangles for start/end. Use the Highlight color for the happy path.
 
 ### Sequence Diagrams
-→ Read `{baseDir}/references/sequence.md`
+鈫?Read `{baseDir}/references/sequence.md`
 
 Key points: actors as boxes at top, vertical dashed lifelines, horizontal arrows for messages (solid=sync, dashed=return). Time flows downward. Activation bars show processing. Number messages if complex.
 
 ### Structural Diagrams
-→ Read `{baseDir}/references/structural.md`
+鈫?Read `{baseDir}/references/structural.md`
 
 Key points: compartmented boxes (name / attributes / methods for class diagrams). Relationship lines: solid with filled diamond=composition, solid with empty diamond=aggregation, dashed arrow=dependency, solid triangle=inheritance.
 
@@ -209,21 +209,21 @@ Rounded-rect states with double-border for composite states. Filled circle for i
 
 ## Output Rules
 
-1. Output a **single `.svg` file** — no external dependencies except the Google Fonts import
+1. Output a **single `.svg` file** 鈥?no external dependencies except the Google Fonts import
 2. Set `viewBox` to fit all content with 30px padding; do NOT set fixed `width`/`height` attributes (let the SVG scale responsively)
 3. Include `xmlns="http://www.w3.org/2000/svg"` on the root `<svg>` element
 4. Put all `<style>`, `<defs>`, markers, and patterns at the top of the SVG
 5. Use `text-anchor="middle"` for centered labels; ensure text doesn't overflow boxes
-6. **Chinese text support:** When labels contain Chinese characters, use `font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif'` and increase box widths — CJK characters are wider
+6. **Chinese text support:** When labels contain Chinese characters, use `font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif'` and increase box widths 鈥?CJK characters are wider
 7. **Save location:** If the input is a file, save to `{inputFileDir}/diagram/`. Otherwise save to `{projectDir}/diagram/{topic-slug}/`. Create the directory if it doesn't exist
 
 ## Script
 
 Determine this SKILL.md file's directory path as `{baseDir}`. Script path: `{baseDir}/scripts/main.ts`.
 
-Resolve `${BUN_X}` runtime: if `bun` installed → `bun`; if `npx` available → `npx -y bun`; else suggest installing bun.
+Resolve `${BUN_X}` runtime: if `bun` installed 鈫?`bun`; if `npx` available 鈫?`npx -y bun`; else suggest installing bun.
 
-### SVG → @2x PNG
+### SVG 鈫?@2x PNG
 
 After saving the SVG, convert it to a @2x PNG:
 
@@ -232,9 +232,32 @@ ${BUN_X} {baseDir}/scripts/main.ts <svg-path> [options]
 ```
 
 Options:
-- `-s, --scale <n>` — Scale factor (default: 2)
-- `-o, --output <path>` — Custom output path (default: `<input>@2x.png`)
-- `--json` — JSON output
+- `-s, --scale <n>` 鈥?Scale factor (default: 2)
+- `-o, --output <path>` 鈥?Custom output path (default: `<input>@2x.png`)
+- `--json` 鈥?JSON output
+
+
+## SVG-to-PPTX Conversion
+
+After saving the SVG, convert it to an editable PowerPoint presentation using the bundled script:
+
+```bash
+python {baseDir}/scripts/svg2pptx.py <svg-path> [-o output.pptx]
+```
+
+The script parses SVG elements (rect, ellipse, line, text, polygon) and rebuilds them as native
+PowerPoint shapes with matching colors, positions, and styles. The output is a 16:9 dark-themed
+slide where every shape and text box is individually editable in PowerPoint.
+
+**Prerequisites:** Install python-pptx in a writable directory:
+
+```powershell
+python -m pip install python-pptx --target "$env:USERPROFILE\Documents\Codex\python-libs" --proxy http://127.0.0.1:7897 --trusted-host pypi.org --trusted-host files.pythonhosted.org
+$env:PYTHONPATH = "$env:USERPROFILE\Documents\Codex\python-libs"
+```
+
+**Options:**
+- `-o, --output <path>` — Custom output path (default: `<input>.pptx`)
 
 ## Process
 
@@ -242,12 +265,12 @@ Options:
 2. Read the relevant reference file if one exists for that type
 3. Plan the layout: list all components, determine grouping and flow direction, calculate positions
 4. Write the SVG following the layering order above
-5. Verify spacing rules — no overlaps, legends outside boundaries, viewBox large enough
+5. Verify spacing rules 鈥?no overlaps, legends outside boundaries, viewBox large enough
 6. Save the SVG file
 7. Run `${BUN_X} {baseDir}/scripts/main.ts <svg-path>` to generate @2x PNG
-8. Present both files to the user
-﻿
-## Real-World Troubleshooting Notes
+8. Run `python {baseDir}/scripts/svg2pptx.py <svg-path>` to generate an editable PPTX
+9. Present both files to the user
+锘?## Real-World Troubleshooting Notes
 
 This section captures practical issues encountered when installing and using this skill in restricted/sandboxed environments (e.g., Windows Codex CLI with network sandboxing).
 
@@ -279,7 +302,8 @@ This section captures practical issues encountered when installing and using thi
 
 ### 2. Copying Skills to ~/.codex/skills Is Denied
 
-**Symptom:** Copy-Item / obocopy to ~/.codex/skills returns Access is denied.
+**Symptom:** Copy-Item / 
+obocopy to ~/.codex/skills returns Access is denied.
 
 **Root Cause:** The sandbox process lacks write access to that directory.
 
@@ -293,7 +317,7 @@ robocopy "<source>" "C:\Users\zhaox\.codex\skills\baoyu-diagram" /E /COPY:DAT
 **Symptom:** The recommended ${BUN_X} {baseDir}/scripts/main.ts <svg> fails because un/
 ode is not installed and cannot be downloaded.
 
-**Workaround (Windows + Edge):** Use Microsoft Edge in headless mode to screenshot an HTML page containing the SVG at 2× scale:
+**Workaround (Windows + Edge):** Use Microsoft Edge in headless mode to screenshot an HTML page containing the SVG at 2脳 scale:
 `powershell
  = "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
  = "diagram@2x.png"
@@ -303,46 +327,7 @@ New-Item -ItemType Directory -Path  -Force | Out-Null
 Start-Process  -ArgumentList "--headless --disable-gpu --user-data-dir= --screenshot= --window-size=2240,1560 --hide-scrollbars --no-sandbox file:///" -WindowStyle Hidden -Wait
 `
 
-### 4. SVG-to-Editable-PPTX
-
-**Symptom:** User wants the architecture diagram as editable PowerPoint shapes, not a static image.
-
-**Solution:** Use python-pptx to programmatically draw native PowerPoint shapes and text boxes.
-
-**Setup in sandbox:** If pip cannot install to the default user path, install to a workspace directory and add it to PYTHONPATH:
-`powershell
-python -m pip install python-pptx --target "C:\Users\zhaox\Documents\Codex\python-libs" --proxy http://127.0.0.1:7897 --trusted-host pypi.org --trusted-host files.pythonhosted.org
- = "C:\Users\zhaox\Documents\Codex\python-libs"
-`
-
-**Key code pattern:**
-`python
-from pptx import Presentation
-from pptx.util import Inches, Pt
-from pptx.dml.color import RGBColor
-from pptx.enum.shapes import MSO_SHAPE
-from pptx.enum.text import PP_ALIGN
-
-prs = Presentation()
-prs.slide_width = Inches(16)
-prs.slide_height = Inches(11)
-slide = prs.slides.add_slide(prs.slide_layouts[6])
-
-shape = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1), Inches(1), Inches(3), Inches(1.5))
-shape.fill.solid()
-shape.fill.fore_color.rgb = RGBColor(8, 51, 68)
-shape.line.color.rgb = RGBColor(34, 211, 238)
-tf = shape.text_frame
-tf.text = "Component"
-p = tf.paragraphs[0]
-p.font.size = Pt(13)
-p.font.color.rgb = RGBColor(248, 250, 252)
-p.alignment = PP_ALIGN.CENTER
-
-prs.save("output.pptx")
-`
-
-### 5. General Restricted-Environment Checklist
+### 4. General Restricted-Environment Checklist
 
 - **Network:** Always check for local proxy ports first; direct HTTPS is often blocked.
 - **Permissions:** If writing to user home fails, write to the workspace root ($env:USERPROFILE\Documents\Codex) and request escalation only when copying to protected destinations.
