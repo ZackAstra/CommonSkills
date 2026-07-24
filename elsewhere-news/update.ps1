@@ -1,15 +1,22 @@
 ﻿# elsewhere-news skill auto-update script
-# Fetches latest SKILL.md from URL and updates local copy if version is newer
+# Fetches latest SKILL.md from URL, pulls from GitHub remote, updates local copy
 
 param(
     [string]$SkillUrl = "https://elsewhere.news/skill.md",
     [string]$SkillDir = "$env:USERPROFILE\CommonSkills\elsewhere-news",
+    [string]$RepoDir = "$env:USERPROFILE\CommonSkills",
     [switch]$CommitAndPush
 )
 
+# Step 1: Pull latest from GitHub remote
+Write-Host "Pulling latest from GitHub remote..."
+Push-Location $RepoDir
+git pull origin main 2>&1 | Out-Null
+Pop-Location
+
 $skillFile = Join-Path $SkillDir "SKILL.md"
 
-# Fetch remote skill
+# Step 2: Fetch remote skill from URL
 try {
     $response = Invoke-WebRequest -Uri $SkillUrl -UseBasicParsing -TimeoutSec 10
     $remoteContent = $response.Content
@@ -48,11 +55,9 @@ if ($localVersion -and $remoteVersion -le $localVersion) {
 $remoteContent | Out-File -FilePath $skillFile -Encoding utf8 -Force
 Write-Host "Updated elsewhere-news skill from v$($localVersion -as [string]) to v$remoteVersion"
 
-# Also update the junction in .codex/skills (it's a junction, so it's already synced)
-
 # Optionally commit and push to GitHub
 if ($CommitAndPush) {
-    Push-Location $env:USERPROFILE\CommonSkills
+    Push-Location $RepoDir
     git add -A
     git commit -m "auto-update: elsewhere-news skill v$remoteVersion"
     git push origin main
