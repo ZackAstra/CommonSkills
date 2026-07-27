@@ -20,3 +20,6 @@ Thumbs.db
 # 忽略 git 本身（已在 .git 中）
 .git/
 *.pyz
+
+# Elsewhere API Key (personal credential)
+elsewhere-news/scripts/.env
