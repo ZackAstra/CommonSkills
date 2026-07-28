@@ -1,76 +1,94 @@
-﻿# CommonSkills 椤圭洰
+# CommonSkills 项目
 
-> **AI Agent 鍏叡鎶€鑳戒粨搴擄紙CommonSkills锛?* 鈥斺€?缁熶竴绠＄悊璺?Agent 骞冲彴鐨勫叡浜妧鑳斤紙Skills锛夛紝瀹炵幇涓€澶勭紪鍐欍€佸澶勫鐢ㄣ€?
+> **AI Agent 公共技能仓库（CommonSkills）** —— 统一管理跨 Agent 平台的共享技能（Skills），实现一处编写、多处复用。
+
 ---
 
-## 馃搶 椤圭洰瀹氫綅
+## 📌 项目定位
 
-鏈粨搴撻泦涓鐞嗘墍鏈夊彲琚涓?AI Agent 骞冲彴澶嶇敤鐨勬妧鑳斤紙Skill锛夛紝鍖呮嫭锛?
-- **Kimi**锛圵ork 妯″紡 / Kimi Code IDE 鎻掍欢锛?- **Cursor**
+本仓库集中管理所有可被多个 AI Agent 平台复用的技能（Skill），包括：
+
+- **Kimi**（Work 模式 / Kimi Code IDE 插件）
+- **Cursor**
 - **Codex**
 - **Trae**
 - **Qoder**
-- 浠ュ強浠讳綍鏀寔 `~/.agents/skills/` 鎴?`~/.kimi/skills/` 瑙勮寖鐨?Agent 宸ュ叿
+- 以及任何支持 `~/.agents/skills/` 或 `~/.kimi/skills/` 规范的 Agent 工具
 
 ---
 
-## 馃搧 鐩綍缁撴瀯
+## 📁 目录结构
 
 ```
 CommonSkills/
-鈹溾攢鈹€ README.md                    # 鏈枃浠?鈹溾攢鈹€ .gitignore                   # Git 蹇界暐瑙勫垯
-鈹溾攢鈹€ scripts/
-鈹?  鈹斺攢鈹€ sync-to-kimi.sh          # Kimi Work 妯″紡澶嶅埗鍚屾鑴氭湰
-鈹?  鈹斺攢鈹€ setup-symlinks.ps1       # Windows 杞摼鎺ユ壒閲忚缃剼鏈?鈹溾攢鈹€ [skill-name-1]/              # 鎶€鑳界洰褰?1
-鈹?  鈹斺攢鈹€ SKILL.md                 # 鎶€鑳戒富鏂囦欢锛堝繀椤伙級
-鈹溾攢鈹€ [skill-name-2]/              # 鎶€鑳界洰褰?2
-鈹?  鈹溾攢鈹€ SKILL.md
-鈹?  鈹斺攢鈹€ references/              # 鍙€夛細鍙傝€冭祫鏂?鈹斺攢鈹€ ...
+├── README.md                    # 本文件
+├── .gitignore                   # Git 忽略规则
+├── scripts/
+│   └── sync-to-kimi.sh          # Kimi Work 模式复制同步脚本
+│   └── setup-symlinks.ps1       # Windows 软链接批量设置脚本
+├── [skill-name-1]/              # 技能目录 1
+│   └── SKILL.md                 # 技能主文件（必须）
+├── [skill-name-2]/              # 技能目录 2
+│   ├── SKILL.md
+│   └── references/              # 可选：参考资料
+└── ...
 ```
 
-褰撳墠鍏辨湁 **62 涓叕鍏辨妧鑳?*锛屾兜鐩栵細鍐欎綔銆佷唬鐮佸紑鍙戙€佹暟鎹垎鏋愩€佹姇鐮斻€佸姙鍏嚜鍔ㄥ寲銆丳PT 鐢熸垚绛夈€?
+当前共有 **62 个公共技能**，涵盖：写作、代码开发、数据分析、投研、办公自动化、PPT 生成等。
+
 ---
 
-## 馃敡 鍙岄€氶亾 Agent 鍔犺浇鏈哄埗
+## 🔧 双通道 Agent 加载机制
 
-涓嶅悓 Agent 骞冲彴瀵规妧鑳界洰褰曠殑鍔犺浇鏂瑰紡涓嶅悓锛屾湰椤圭洰閲囩敤 **鍙岄€氶亾鏂规**锛?
-### 閫氶亾 A锛歋ymbolic Link锛堣蒋閾炬帴锛夆€斺€?閫傜敤浜?Cursor / Codex / Trae / Qoder / Kimi Code IDE
+不同 Agent 平台对技能目录的加载方式不同，本项目采用 **双通道方案**：
 
-杩欎簺 Agent 骞冲彴鎵弿鏈湴鏂囦欢绯荤粺鏃?*璺熼殢杞摼鎺ワ紙Symbolic Link锛?*锛屽洜姝ら噰鐢ㄨ蒋閾炬帴鏂瑰紡锛?
-| Agent 绋嬪簭 | 杞摼鎺ヨ矾寰?| 鎸囧悜鐩爣 |
+### 通道 A：Symbolic Link（软链接）—— 适用于 Cursor / Codex / Trae / Qoder / Kimi Code IDE
+
+这些 Agent 平台扫描本地文件系统时**跟随软链接（Symbolic Link）**，因此采用软链接方式：
+
+| Agent 程序 | 软链接路径 | 指向目标 |
 |-----------|-----------|---------|
 | Cursor / Codex / Trae / Qoder | `~/.agents/skills/<skill-name>` | `~/CommonSkills/<skill-name>` |
-| Kimi Code IDE 鎻掍欢 | `~/.kimi/skills/<skill-name>` | `~/CommonSkills/<skill-name>` |
+| Kimi Code IDE 插件 | `~/.kimi/skills/<skill-name>` | `~/CommonSkills/<skill-name>` |
 
-**浼樺娍**锛?- 瀹炴椂鍚屾锛氫慨鏀?`CommonSkills` 涓殑婧愭枃浠讹紝鎵€鏈?Agent 绔嬪嵆鐢熸晥
-- 闆剁淮鎶わ細鏃犻渶鎵嬪姩澶嶅埗
-- 鑺傜渷纾佺洏绌洪棿
+**优势**：
+- 实时同步：修改 `CommonSkills` 中的源文件，所有 Agent 立即生效
+- 零维护：无需手动复制
+- 节省磁盘空间
 
-### 閫氶亾 B锛歂ative Directory Copy锛堝師鐢熺洰褰曞鍒讹級鈥斺€?閫傜敤浜?Kimi Work 妯″紡
+### 通道 B：Native Directory Copy（原生目录复制）—— 适用于 Kimi Work 模式
 
-**Kimi 妗岄潰瀹㈡埛绔紙Work 妯″紡锛夌殑 `daimon` 鍐呮牳鍦ㄦ壂鎻忔妧鑳界洰褰曟椂锛屼細璺宠繃 Symbolic Link锛堣蒋閾炬帴锛?*銆傚洜姝ゅ繀椤婚噰鐢?*鍘熺敓鐩綍澶嶅埗**鏂瑰紡锛?
-| Agent 绋嬪簭 | 澶嶅埗鐩爣璺緞 | 鏉ユ簮 |
+**Kimi 桌面客户端（Work 模式）的 `daimon` 内核在扫描技能目录时，会跳过 Symbolic Link（软链接）**。因此必须采用**原生目录复制**方式：
+
+| Agent 程序 | 复制目标路径 | 来源 |
 |-----------|-----------|------|
-| Kimi Work 妯″紡 | `~/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills/<skill-name>` | `~/CommonSkills/<skill-name>` |
+| Kimi Work 模式 | `~/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills/<skill-name>` | `~/CommonSkills/<skill-name>` |
 
-**鐗圭偣**锛?- 闇€瑕佸鍒讹紙涓嶆槸杞摼鎺ワ級
-- `daimon` 鍐呮牳鍔犺浇鏃惰涓哄師鐢熸妧鑳斤紝UI 鍙甯告樉绀哄拰璋冪敤
-- 鏇存柊鍚庨渶閲嶆柊鍚屾
+**特点**：
+- 需要复制（不是软链接）
+- `daimon` 内核加载时视为原生技能，UI 可正常显示和调用
+- 更新后需重新同步
 
 ---
 
-## 馃殌 蹇€熷紑濮?
-### 1. 棣栨璁剧疆锛圵indows锛?
-#### 姝ラ 1锛氬垱寤?CommonSkills 杞摼鎺ワ紙閫氶亾 A锛?
-鎵撳紑 PowerShell锛堢鐞嗗憳锛夛紝杩愯锛?
+## 🚀 快速开始
+
+### 1. 首次设置（Windows）
+
+#### 步骤 1：创建 CommonSkills 软链接（通道 A）
+
+打开 PowerShell（管理员），运行：
+
 ```powershell
-# 涓?~/.agents/skills/ 鍒涘缓杞摼鎺ワ紙Cursor / Codex / Trae / Qoder锛?$common = "C:\Users\$env:USERNAME\CommonSkills"
+# 为 ~/.agents/skills/ 创建软链接（Cursor / Codex / Trae / Qoder）
+$common = "C:\Users\$env:USERNAME\CommonSkills"
 $agents = "C:\Users\$env:USERNAME\.agents\skills"
 
-# 濡傛灉鐩綍涓嶅瓨鍦ㄥ垯鍒涘缓
+# 如果目录不存在则创建
 if (-not (Test-Path $agents)) { New-Item -ItemType Directory -Path $agents }
 
-# 閬嶅巻 CommonSkills 涓墍鏈夋妧鑳斤紝鍒涘缓杞摼鎺?Get-ChildItem $common -Directory | ForEach-Object {
+# 遍历 CommonSkills 中所有技能，创建软链接
+Get-ChildItem $common -Directory | ForEach-Object {
     $skill = $_.Name
     $src = Join-Path $common $skill
     $dst = Join-Path $agents $skill
@@ -78,7 +96,8 @@ if (-not (Test-Path $agents)) { New-Item -ItemType Directory -Path $agents }
     New-Item -ItemType SymbolicLink -Path $dst -Target $src
 }
 
-# 鍚屾牱涓?~/.kimi/skills/ 鍒涘缓杞摼鎺ワ紙Kimi Code IDE 鎻掍欢锛?$kimi = "C:\Users\$env:USERNAME\.kimi\skills"
+# 同样为 ~/.kimi/skills/ 创建软链接（Kimi Code IDE 插件）
+$kimi = "C:\Users\$env:USERNAME\.kimi\skills"
 if (-not (Test-Path $kimi)) { New-Item -ItemType Directory -Path $kimi }
 Get-ChildItem $common -Directory | ForEach-Object {
     $skill = $_.Name
@@ -89,9 +108,11 @@ Get-ChildItem $common -Directory | ForEach-Object {
 }
 ```
 
-#### 姝ラ 2锛氬鍒跺埌 Kimi Work 妯″紡锛堥€氶亾 B锛?
+#### 步骤 2：复制到 Kimi Work 模式（通道 B）
+
 ```powershell
-# 澶嶅埗鍒?Kimi 妗岄潰瀹㈡埛绔妧鑳界洰褰?$common = "C:\Users\$env:USERNAME\CommonSkills"
+# 复制到 Kimi 桌面客户端技能目录
+$common = "C:\Users\$env:USERNAME\CommonSkills"
 $kimiWork = "C:\Users\$env:USERNAME\AppData\Roaming\kimi-desktop\daimon-share\daimon\skills"
 
 Get-ChildItem $common -Directory | ForEach-Object {
@@ -105,28 +126,32 @@ Get-ChildItem $common -Directory | ForEach-Object {
 
 ---
 
-## 馃攧 鑷姩鍚屾鏈哄埗锛圙it Hook锛?
-### 鍘熺悊
+## 🔄 自动同步机制（Git Hook）
 
-閫氳繃 Git Hook 瀹炵幇锛氬綋 `CommonSkills` 浠撳簱鏇存柊锛坧ull / merge / checkout锛夋椂锛?*鑷姩瑙﹀彂鍚屾鑴氭湰**锛岀‘淇?Kimi Work 妯″紡鐨勬妧鑳界洰褰曞缁堜笌浠撳簱鏈€鏂扮増鏈竴鑷淬€?
-### 宸查厤缃殑 Hook
+### 原理
 
-| Hook 绫诲瀷 | 瑙﹀彂鏃舵満 | 浣滅敤 |
+通过 Git Hook 实现：当 `CommonSkills` 仓库更新（pull / merge / checkout）时，**自动触发同步脚本**，确保 Kimi Work 模式的技能目录始终与仓库最新版本一致。
+
+### 已配置的 Hook
+
+| Hook 类型 | 触发时机 | 作用 |
 |----------|---------|------|
-| `post-merge` | 鎵ц `git pull` 鎴?`git merge` 鍚?| 鍚屾鏈€鏂版妧鑳藉埌 Kimi Work 妯″紡 |
-| `post-checkout` | 鎵ц `git checkout` 鍒囨崲鍒嗘敮鍚?| 鍚屾褰撳墠鍒嗘敮鎶€鑳藉埌 Kimi Work 妯″紡 |
-| `post-commit` | 鎵ц `git commit` 鍚?| 鍙€夛細鍚屾鏈湴淇敼鍒?Kimi Work 妯″紡 |
+| `post-merge` | 执行 `git pull` 或 `git merge` 后 | 同步最新技能到 Kimi Work 模式 |
+| `post-checkout` | 执行 `git checkout` 切换分支后 | 同步当前分支技能到 Kimi Work 模式 |
+| `post-commit` | 执行 `git commit` 后 | 可选：同步本地修改到 Kimi Work 模式 |
 
-### 鍚屾鑴氭湰閫昏緫锛坄scripts/sync-to-kimi.sh`锛?
+### 同步脚本逻辑（`scripts/sync-to-kimi.sh`）
+
 ```bash
 #!/bin/bash
-# 鍙岄€氶亾鍚屾鑴氭湰
-# 閫氶亾 A锛氳蒋閾炬帴锛堝凡瀛樺湪锛屾棤闇€鎿嶄綔锛?# 閫氶亾 B锛氬鍒跺埌 Kimi Work 妯″紡鐩綍
+# 双通道同步脚本
+# 通道 A：软链接（已存在，无需操作）
+# 通道 B：复制到 Kimi Work 模式目录
 
 COMMON="C:/Users/$(whoami)/CommonSkills"
 KIMI_WORK="C:/Users/$(whoami)/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills"
 
-echo "[Sync] 寮€濮嬪悓姝?CommonSkills -> Kimi Work 妯″紡..."
+echo "[Sync] 开始同步 CommonSkills -> Kimi Work 模式..."
 
 cd "$COMMON" || exit 1
 for skill in */; do
@@ -134,30 +159,33 @@ for skill in */; do
     src="$COMMON/$skill"
     dst="$KIMI_WORK/$skill"
     
-    # 璺宠繃闈炵洰褰曢」鍜岄殣钘忔枃浠?    [ -d "$src" ] || continue
+    # 跳过非目录项和隐藏文件
+    [ -d "$src" ] || continue
     [[ "$skill" == .* ]] && continue
     
-    # 濡傛灉鐩爣鏄蒋閾炬帴锛屽厛鍒犻櫎
+    # 如果目标是软链接，先删除
     if [ -L "$dst" ]; then
         rm -f "$dst"
-        echo "  [绉婚櫎杞摼鎺 $skill"
+        echo "  [移除软链接] $skill"
     fi
     
-    # 澶嶅埗涓哄師鐢熺洰褰?    rm -rf "$dst"
+    # 复制为原生目录
+    rm -rf "$dst"
     cp -r "$src" "$dst"
-    echo "  [宸插鍒禲 $skill"
+    echo "  [已复制] $skill"
 done
 
-echo "[Sync] 鍚屾瀹屾垚銆?
+echo "[Sync] 同步完成。"
 ```
 
-### 婵€娲?Hook
+### 激活 Hook
 
 ```bash
-# 鍦?CommonSkills 鐩綍涓?cd ~/CommonSkills
+# 在 CommonSkills 目录下
+cd ~/CommonSkills
 chmod +x scripts/sync-to-kimi.sh
 
-# 閾炬帴 hook
+# 链接 hook
 cp scripts/sync-to-kimi.sh .git/hooks/post-merge
 cp scripts/sync-to-kimi.sh .git/hooks/post-checkout
 chmod +x .git/hooks/post-merge
@@ -166,22 +194,24 @@ chmod +x .git/hooks/post-checkout
 
 ---
 
-## 鉃?鏂板鎶€鑳界殑鏍囧噯娴佺▼
+## ➕ 新增技能的标准流程
 
-1. **鍦?`CommonSkills/` 涓嬪垱寤烘柊鎶€鑳界洰褰?*
+1. **在 `CommonSkills/` 下创建新技能目录**
    ```bash
    mkdir -p ~/CommonSkills/my-new-skill
    cat > ~/CommonSkills/my-new-skill/SKILL.md << 'EOF'
    ---
    name: my-new-skill
-   description: 鏂版妧鑳芥弿杩?   version: 1.0.0
+   description: 新技能描述
+   version: 1.0.0
    ---
    
-   # 鏂版妧鑳藉唴瀹?   ...
+   # 新技能内容
+   ...
    EOF
    ```
 
-2. **鎻愪氦鍒?Git**
+2. **提交到 Git**
    ```bash
    cd ~/CommonSkills
    git add my-new-skill/
@@ -189,60 +219,91 @@ chmod +x .git/hooks/post-checkout
    git push
    ```
 
-3. **鑷姩鍚屾锛圙it Hook锛?*
-   - `post-commit` / `post-merge` / `post-checkout` 浼氳嚜鍔ㄦ墽琛屽悓姝ヨ剼鏈?   - Kimi Work 妯″紡鐩綍浼氬鍒舵柊澧炴妧鑳?   - 鍏朵粬 Agent锛圕ursor/Codex/Trae/Qoder/KimiCodeIDE锛夐€氳繃杞摼鎺ュ疄鏃剁敓鏁?
-4. **楠岃瘉**
-   - 閲嶅惎 Kimi 瀹㈡埛绔紙Work 妯″紡锛夛紝鎼滅储鏂版妧鑳藉悕绉?   - 鍦?Cursor/Codex/Trae/Qoder 涓獙璇佹柊鎶€鑳藉彲鐢?   - 閲嶅惎 Kimi 瀹㈡埛绔紝鎼滅储鏂版妧鑳藉悕绉?   - 鍦?Cursor/Codex/Trae/Qoder 涓獙璇佹柊鎶€鑳藉彲鐢?
+3. **自动同步（Git Hook）**
+   - `post-commit` / `post-merge` / `post-checkout` 会自动执行同步脚本
+   - Kimi Work 模式目录会复制新增技能
+   - 其他 Agent（Cursor/Codex/Trae/Qoder/KimiCodeIDE）通过软链接实时生效
+
+4. **验证**
+   - 重启 Kimi 客户端（Work 模式），搜索新技能名称
+   - 在 Cursor/Codex/Trae/Qoder 中验证新技能可用
+   - 重启 Kimi 客户端，搜索新技能名称
+   - 在 Cursor/Codex/Trae/Qoder 中验证新技能可用
+
 ---
 
-## 馃摑 鍚?Agent 鎶€鑳界洰褰曢€熸煡
+## 📝 各 Agent 技能目录速查
 
-| Agent | 鎶€鑳界洰褰?| 鍔犺浇鏂瑰紡 | 鏄惁闇€瑕侀噸鍚?|
+| Agent | 技能目录 | 加载方式 | 是否需要重启 |
 |-------|---------|---------|------------|
-| **Kimi Work 妯″紡** | `~/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills/` | 澶嶅埗锛堝師鐢熺洰褰曪級 | 鉁?闇€瑕侀噸鍚鎴风 |
-| **Kimi Code IDE** | `~/.kimi/skills/` | 杞摼鎺?| 鉂?瀹炴椂鐢熸晥 |
-| **Cursor** | `~/.cursor/skills/` 鎴?`~/.agents/skills/` | 杞摼鎺?| 鉂?瀹炴椂鐢熸晥 |
-| **Codex** | `~/.codex/skills/` 鎴?`~/.agents/skills/` | 杞摼鎺?| 鉂?瀹炴椂鐢熸晥 |
-| **Trae** | `~/.trae/skills/` 鎴?`~/.agents/skills/` | 杞摼鎺?| 鉂?瀹炴椂鐢熸晥 |
-| **Qoder** | `~/.qoder/skills/` 鎴?`~/.agents/skills/` | 杞摼鎺?| 鉂?瀹炴椂鐢熸晥 |
+| **Kimi Work 模式** | `~/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills/` | 复制（原生目录） | ✅ 需要重启客户端 |
+| **Kimi Code IDE** | `~/.kimi/skills/` | 软链接 | ❌ 实时生效 |
+| **Cursor** | `~/.cursor/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
+| **Codex** | `~/.codex/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
+| **Trae** | `~/.trae/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
+| **Qoder** | `~/.qoder/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
 
-> 娉細`~/.agents/skills/` 鏄€氱敤鍏变韩鐩綍锛岃澶氫釜 Agent 鏀寔銆?
+> 注：`~/.agents/skills/` 是通用共享目录，被多个 Agent 支持。
+
 ---
 
-## 鈿狅笍 宸茬煡闄愬埗涓庢敞鎰忎簨椤?
-### 1. Kimi Work 妯″紡涓嶆敮鎸佽蒋閾炬帴
+## ⚠️ 已知限制与注意事项
 
-**鏍规湰鍘熷洜**锛欿imi 妗岄潰瀹㈡埛绔殑 `daimon` 鍐呮牳鍦ㄦ壂鎻?`daimon-share/daimon/skills/` 鏃讹紝浣跨敤 `fs.readdir` 鐨?`withFileTypes: true` 骞舵鏌?`dirent.isSymbolicLink()`锛屼富鍔ㄨ烦杩囨墍鏈?Symbolic Link锛堣蒋閾炬帴锛夊拰 Junction锛堢洰褰曡仈鎺ワ級銆?
-**楠岃瘉杩囩▼**锛?- `test-native-daimon`锛堝師鐢熺洰褰曪級鈫?鉁?鍙姞杞?- `cubox`锛堝師鐢熺洰褰曪級鈫?鉁?鍙姞杞?- `agently-mail`锛堣蒋閾炬帴锛夆啋 鉂?涓嶅彲鍔犺浇
-- `backend-dev`锛堣蒋閾炬帴锛夆啋 鉂?涓嶅彲鍔犺浇
+### 1. Kimi Work 模式不支持软链接
 
-**缁撹**锛氬彧鏈?*鍘熺敓鐩綍**锛堥潪杞摼鎺ワ級鎵嶈兘琚?Kimi Work 妯″紡鍔犺浇銆?
-### 2. 閰嶇疆宸紓
+**根本原因**：Kimi 桌面客户端的 `daimon` 内核在扫描 `daimon-share/daimon/skills/` 时，使用 `fs.readdir` 的 `withFileTypes: true` 并检查 `dirent.isSymbolicLink()`，主动跳过所有 Symbolic Link（软链接）和 Junction（目录联接）。
 
-Kimi 瀹㈡埛绔?Work 妯″紡涓?Kimi Code IDE 鎻掍欢浣跨敤**涓嶅悓鐨勯厤缃枃浠?*锛?- Kimi Code IDE 鎻掍欢锛歚~/.kimi/config.toml`锛堟敮鎸?`extra_skill_dirs`锛?- Kimi Work 妯″紡锛歚daimon-share/daimon/runtime/kimi-code/config.toml`锛坄extra_skill_dirs` 鍙兘鏃犳晥锛?
-### 3. 鍐呯疆鎶€鑳斤紙builtin-skills锛?
-Kimi 瀹㈡埛绔墦鍖呬簡 34 涓唴缃妧鑳斤紙`builtin-skills`锛夛紝浣嶄簬锛?```
+**验证过程**：
+- `test-native-daimon`（原生目录）→ ✅ 可加载
+- `cubox`（原生目录）→ ✅ 可加载
+- `agently-mail`（软链接）→ ❌ 不可加载
+- `backend-dev`（软链接）→ ❌ 不可加载
+
+**结论**：只有**原生目录**（非软链接）才能被 Kimi Work 模式加载。
+
+### 2. 配置差异
+
+Kimi 客户端 Work 模式与 Kimi Code IDE 插件使用**不同的配置文件**：
+- Kimi Code IDE 插件：`~/.kimi/config.toml`（支持 `extra_skill_dirs`）
+- Kimi Work 模式：`daimon-share/daimon/runtime/kimi-code/config.toml`（`extra_skill_dirs` 可能无效）
+
+### 3. 内置技能（builtin-skills）
+
+Kimi 客户端打包了 34 个内置技能（`builtin-skills`），位于：
+```
 ~/AppData/Roaming/kimi-desktop/daimon-bundle/app/daimon/assets/builtin-skills/
 ```
-杩欎簺鎶€鑳芥湁 `builtInSkillsSha256` 鏍￠獙锛屼笉寤鸿淇敼銆?
+这些技能有 `builtInSkillsSha256` 校验，不建议修改。
+
 ---
 
-## 馃敡 鏁呴殰鎺掓煡
+## 🔧 故障排查
 
-### 闂锛欿imi Work 妯″紡鎵句笉鍒版煇涓妧鑳?
-**鎺掓煡姝ラ**锛?1. 纭鎶€鑳界洰褰曞湪 `daimon-share/daimon/skills/` 涓嬫槸**鍘熺敓鐩綍**锛堜笉鏄蒋閾炬帴锛?   ```bash
+### 问题：Kimi Work 模式找不到某个技能
+
+**排查步骤**：
+1. 确认技能目录在 `daimon-share/daimon/skills/` 下是**原生目录**（不是软链接）
+   ```bash
    ls -la ~/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills/<skill-name>
-   # 濡傛灉鏄剧ず lrwxrwxrwx -> ...锛岃鏄庢槸杞摼鎺ワ紝闇€瑕佹浛鎹负澶嶅埗
+   # 如果显示 lrwxrwxrwx -> ...，说明是软链接，需要替换为复制
    ```
-2. 纭 `SKILL.md` 鐨?YAML frontmatter 鏍煎紡姝ｇ‘锛?   ```yaml
+2. 确认 `SKILL.md` 的 YAML frontmatter 格式正确：
+   ```yaml
    ---
    name: skill-name
-   description: 鎶€鑳芥弿杩?   version: 1.0.0
+   description: 技能描述
+   version: 1.0.0
    ---
    ```
-3. 纭鎶€鑳界洰褰曞悕涓?`SKILL.md` 涓殑 `name` 涓€鑷?4. 閲嶅惎 Kimi 瀹㈡埛绔?
-### 闂锛氳蒋閾炬帴鍦ㄥ叾浠?Agent 涓け鏁?
-**鎺掓煡姝ラ**锛?1. 纭杞摼鎺ョ洰鏍囪矾寰勫瓨鍦?2. 纭杞摼鎺ユ病鏈夎鐮村潖锛堝鐩爣鐩綍琚Щ鍔ㄦ垨鍒犻櫎锛?3. 閲嶆柊鍒涘缓杞摼鎺ワ細
+3. 确认技能目录名与 `SKILL.md` 中的 `name` 一致
+4. 重启 Kimi 客户端
+
+### 问题：软链接在其他 Agent 中失效
+
+**排查步骤**：
+1. 确认软链接目标路径存在
+2. 确认软链接没有被破坏（如目标目录被移动或删除）
+3. 重新创建软链接：
    ```bash
    rm -f ~/.agents/skills/<skill-name>
    ln -s ~/CommonSkills/<skill-name> ~/.agents/skills/<skill-name>
@@ -250,29 +311,29 @@ Kimi 瀹㈡埛绔墦鍖呬簡 34 涓唴缃妧鑳斤紙`builtin-skills`�
 
 ---
 
-## 馃摎 鍙傝€冩枃妗?
+## 📚 参考文档
+
 - [yaolifeng.com - symlink_git_personal_agent_skill](https://yaolifeng.com/shorts/symlink_git_personal_agent_skill)
-- Kimi Code 瀹樻柟鏂囨。锛歚.kimi/skills/` 鍜?`.agents/skills/` 鐩綍瑙勮寖
-- Node.js `fs.readdir` 涓?`dirent.isSymbolicLink()` 琛屼负璇存槑
+- Kimi Code 官方文档：`.kimi/skills/` 和 `.agents/skills/` 目录规范
+- Node.js `fs.readdir` 与 `dirent.isSymbolicLink()` 行为说明
 
 ---
 
-## 馃彿锔?鐗堟湰鍘嗗彶
+## 🏷️ 版本历史
 
-| 鐗堟湰 | 鏃ユ湡 | 鍙樻洿 |
+| 版本 | 日期 | 变更 |
 |------|------|------|
-| 1.0.0 | 2026-07-15 | 鍒濆寤虹珛锛屾敮鎸?Kimi/Cursor/Codex/Trae/Qoder 鍙岄€氶亾鍚屾 |
-| 1.0.1 | 2026-07-15 | docs: 鏄庣‘鍚屾鑼冨洿浠呴檺 Kimi Work 妯″紡锛孋hat 妯″紡涓嶅彈褰卞搷 |
-| 1.0.2 | 2026-07-15 | docs: 瀹屽叏绉婚櫎 Chat 妯″紡寮曠敤锛屽悓姝ヨ寖鍥寸簿纭负 Kimi Work + Kimi Code IDE |
-| 1.0.3 | 2026-07-15 | fix: 鍒犻櫎鎶€鑳界洰褰曢€熸煡琛ㄤ腑鐨勯噸澶?Kimi Code IDE 琛?|
-| 1.1.0 | 2026-07-15 | fix: 淇 5 涓妧鑳界殑鍓嶇疆鍏冩暟鎹紙time-awareness銆亀orker-safety 琛ュ厖 frontmatter锛沢ongkao-review-allinone銆乲imi-webbridge-desktop銆乲imiim 淇 name 涓庣洰褰曞悕涓嶅尮閰嶏級 |
-| 1.1.1 | 2026-07-15 | fix: 绉婚櫎鍚屾鑴氭湰涓殑 Chat 妯″紡娈嬬暀寮曠敤锛涗慨澶嶆椂闂存埑姣旇緝閫昏緫锛堢洰褰曠骇 鈫?SKILL.md 鏂囦欢绾э級 |
-| 1.1.2 | 2026-07-15 | fix: 淇鎶€鑳芥€绘暟 64 鈫?62锛涙洿鏂?git hooks 鍒版渶鏂板悓姝ヨ剼鏈増鏈?|
-| 1.1.3 | 2026-07-15 | docs: 鏂板瀹屾暣澶嶇洏楠岃瘉鎶ュ憡 `_FINAL_VERIFICATION_REPORT.md` |
+| 1.0.0 | 2026-07-15 | 初始建立，支持 Kimi/Cursor/Codex/Trae/Qoder 双通道同步 |
+| 1.0.1 | 2026-07-15 | docs: 明确同步范围仅限 Kimi Work 模式，Chat 模式不受影响 |
+| 1.0.2 | 2026-07-15 | docs: 完全移除 Chat 模式引用，同步范围精确为 Kimi Work + Kimi Code IDE |
+| 1.0.3 | 2026-07-15 | fix: 删除技能目录速查表中的重复 Kimi Code IDE 行 |
+| 1.1.0 | 2026-07-15 | fix: 修复 5 个技能的前置元数据（time-awareness、worker-safety 补充 frontmatter；gongkao-review-allinone、kimi-webbridge-desktop、kimiim 修正 name 与目录名不匹配） |
+| 1.1.1 | 2026-07-15 | fix: 移除同步脚本中的 Chat 模式残留引用；修复时间戳比较逻辑（目录级 -> SKILL.md 文件级） |
+| 1.1.2 | 2026-07-15 | fix: 修正技能总数 64 -> 62；更新 git hooks 到最新同步脚本版本 |
+| 1.1.3 | 2026-07-15 | docs: 新增完整复盘验证报告 `_FINAL_VERIFICATION_REPORT.md` |
 
 ---
 
-*鏈」鐩敱 ZackAstra 缁存姢锛屾妧鑳芥潵婧愬寘鎷涓?Agent 骞冲彴鍐呯疆鎶€鑳藉拰鑷畾涔夋妧鑳姐€?
 ## 🆕 TeleAgent 接入说明
 
 **TeleAgent** 是一款 Windows 桌面端 AI Agent 工具（v2.0.3），技能目录位于 C:\Users\zhaox\.config\TeleAgent\skills\。
@@ -283,7 +344,7 @@ TeleAgent 采用 **Junction（目录联接）** 方式接入 CommonSkills：
 
 | Agent 程序 | 技能目录路径 | 方式 |
 |-----------|-----------|------|
-| **TeleAgent** | ~/.config/TeleAgent/skills/CS_<skill-name> | Junction → ~/CommonSkills/<skill-name> |
+| **TeleAgent** | ~/.config/TeleAgent/skills/CS_<skill-name> | Junction -> ~/CommonSkills/<skill-name> |
 
 ### 命名约定
 
@@ -291,15 +352,15 @@ TeleAgent 采用 **Junction（目录联接）** 方式接入 CommonSkills：
 |------|---------------------|------|
 | **CommonSkills** | CS_<skill-name> | Junction 指向 CommonSkills 源目录 |
 | **TeleAgent 官方** | 保持原名 | canvas-design, docx 等内置技能 |
-| **TeleAgent Hub** | 保持原名 | 	eleppt-pro, 	elecom-ppt-writer 等市场技能 |
-| **TeleAgent → CommonSkills** | 保持原名 | 已添加 create_source: teleagent 标记 |
+| **TeleAgent Hub** | 保持原名 | eleppt-pro, elecom-ppt-writer 等市场技能 |
+| **TeleAgent -> CommonSkills** | 保持原名 | 已添加 create_source: teleagent 标记 |
 | **同名冲突** | Tele_<skill-name> | 如 Tele_skill-creator 避免与 CommonSkills 冲突 |
 
 ### 初始化
 
 首次设置需以管理员身份运行：
 
-`powershell
+```powershell
 # 1. 停止 TeleAgent
 Stop-Process -Name "TeleAgent" -Force
 
@@ -309,19 +370,19 @@ powershell -ExecutionPolicy Bypass -File "scripts\init-teleagent-junctions.ps1"
 # 备份
 Copy-Item "C:\Users\zhaox\.config\TeleAgent\skills\*" "C:\Users\zhaox\CommonSkills\_backup\teleagent\" -Recurse
 # 创建 junction
-Get-ChildItem "C:\Users\zhaox\CommonSkills" -Directory | Where-Object { .Name -notin @('.git','scripts','_backup') } | ForEach-Object {
-    New-Item -ItemType Junction -Path "C:\Users\zhaox\.config\TeleAgent\skills\CS_" -Target .FullName -Force
+Get-ChildItem "C:\Users\zhaox\CommonSkills" -Directory | Where-Object { $_.Name -notin @('.git','scripts','_backup') } | ForEach-Object {
+    New-Item -ItemType Junction -Path "C:\Users\zhaox\.config\TeleAgent\skills\CS_$($_.Name)" -Target $_.FullName -Force
 }
 
 # 3. 重启 TeleAgent
 Start-Process "D:\Program Files\TeleAgent\TeleAgent.exe"
-`
+```
 
 ### 日常维护
 
 使用 scripts\sync-teleagent.ps1 脚本进行同步：
 
-`powershell
+```powershell
 # 检查状态（管理员）
 powershell -ExecutionPolicy Bypass -File "scripts\sync-teleagent.ps1" -Action check
 
@@ -330,13 +391,13 @@ powershell -ExecutionPolicy Bypass -File "scripts\sync-teleagent.ps1" -Action sy
 
 # 从备份恢复（管理员）
 powershell -ExecutionPolicy Bypass -File "scripts\sync-teleagent.ps1" -Action restore
-`
+```
 
 ### 注意事项
 
 - TeleAgent 的 .config\TeleAgent\skills\ 目录受 Windows 权限保护，**所有操作需管理员权限**
 - TeleAgent 维护 skills-metadata.json 记录技能指纹，junction 内容实时更新，指纹自然匹配
-- 部分 TeleAgent 内置技能（如 canvas-design、rontend-design）在 CommonSkills 中没有对应项
-- 来自 TeleAgent Hub 的技能（如 	eleppt-pro、	elecom-ppt-writer）已反向导入 CommonSkills，create_source: teleagent 标记
-- 如果 TeleAgent 更新版本，需检查 uildin-meta.json 确保技能加载逻辑未改变
+- 部分 TeleAgent 内置技能（如 canvas-design、frontend-design）在 CommonSkills 中没有对应项
+- 来自 TeleAgent Hub 的技能（如 eleppt-pro、elecom-ppt-writer）已反向导入 CommonSkills，create_source: teleagent 标记
+- 如果 TeleAgent 更新版本，需检查 builtin-meta.json 确保技能加载逻辑未改变
 
