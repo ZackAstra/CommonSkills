@@ -1,0 +1,5 @@
+interface:
+  display_name: "YunMai 静默与禁用"
+  short_description: "企业 SASE/EDR 客户端静默、禁自启、停驻留、解除安全接管"
+  brand_color: "#0F766E"
+  default_prompt: "Use $yunmai-disable to stop a corp-provisioned SASE/EDR client: disable autostart, background residency and Windows Security Center takeover; keep local quarantine (rollback) unless IT unlinks the account."
