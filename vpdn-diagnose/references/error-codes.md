@@ -122,6 +122,11 @@ VPDN clients communicate with the authentication server via HTTP/HTTPS before es
 
 ---
 
+### 变体：Clash Verge "system failed"（HRESULT 0x80070057）
+- 现象：开启系统代理后 Clash Verge 显示 `system failed`，Google 等网站全打不开（代理实际未生效），VPDN 却"看似正常"
+- 根因：`ProxyOverride` / `system_proxy_bypass` 含 CIDR（如 `134.224.0.0/15`）——Windows 例外列表**不支持 CIDR**，WinINet 返回 `ERROR_INVALID_PARAMETER(87)` = `0x80070057`
+- 修复：例外改用通配符 `134.224.*;134.225.*`；VPDN 直连交给 mihomo `IP-CIDR,134.224.0.0/15,DIRECT`；改 `verge.yaml` 前先完全退出 Clash Verge（退出会写回内存配置覆盖文件）
+- 详见 SKILL.md 路径 A5
 ## Error Code 651 Deep Dive
 
 Code 651 is the most common dial failure after the proxy issue is ruled out.

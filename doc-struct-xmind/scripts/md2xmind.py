@@ -3,12 +3,12 @@
 将层级结构的 Markdown 文件转换为 XMind 2020+ 格式文件 (.xmind)。
 
 特性：
-- 支持 # ~ ###### 六级标题（6级自动映射为5级）
+- 支持 # ~ ####### 七级标题（# 为中心主题，## ~ ####### 为1~6级分支）
 - 非标题行自动聚合为上一个标题节点的 notes
 - 自动过滤 AIGC 水印行（> AI生成）
-- 蓝色系主题、微软雅黑字体、圆角矩形、曲线连接线
-- 三级旗帜标识：flag-blue(主题) / flag-yellow(章节) / flag-green(子节)
-- 深层叶子节点自动折叠
+- 三套主题（blue/green/red），微软雅黑字体、圆角矩形、曲线连接线
+- 旗帜映射：由调用方传入 hl_map，仅标题有底色时插入同色旗帜
+- 深层节点自动折叠（阈值可通过 fold_threshold 参数配置）
 - unbalanced 布局：左右均衡，右侧 N 个、左侧剩余，左侧自动反序保证从上到下 1->N
 
 用法：
@@ -17,6 +17,9 @@
 参数：
   --right N   右侧分支数，默认取总分支数的一半（向上取整）
   --theme     主题色，默认 blue
+
+注意：
+  Markdown 中 # 为中心主题，## ~ ####### 为1~6级分支
 """
 
 import re
@@ -357,18 +360,14 @@ THEMES = {
     }
 }
 
-# flag-red 标记关键词
-FLAG_RED_KEYWORDS = ['Skill', 'skill', '智能体', 'Agent', 'agent',
-                     '算法', 'AI算法仓', '语言大模型', '大模型']
-
 
 def parse_md(filepath):
     """解析 Markdown，返回结构化节点列表。
 
     规则：
-    - # ~ ##### 解析为层级节点
+    - # ~ ####### 解析为层级节点（1~7级）
     - 连续非标题行聚合为上一个节点的 notes
-    - 过滤 '> AI生成' 水印行
+    - 过滤 '> AI生成' 等AIGC水印行
     """
     nodes = []
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -392,10 +391,10 @@ def parse_md(filepath):
         if not stripped or stripped == '---':
             continue
 
-        m = re.match(r'^(#{1,6})\s+(.+)$', stripped)
+        m = re.match(r'^(#{1,7})\s+(.+)$', stripped)
         if m:
             flush_notes()
-            level = min(len(m.group(1)), 5)  # 6级标题映射为5级
+            level = min(len(m.group(1)), 7)  # 支持最多7级标题（# 中心主题 + ###### 正文6级）
             title = m.group(2).strip()
             nodes.append({'level': level, 'title': title, 'notes': ''})
         else:
@@ -424,10 +423,14 @@ def build_tree(nodes):
     return root['children']
 
 
-def topic_to_dict(node, depth=1, hl_map=None):
-    """将树节点转为 XMind 2020+ JSON 格式的 topic dict，带样式和标记。
-    
-    hl_map: {title: flag_id} 底色映射，仅标题有底色时插入同色旗帜
+def topic_to_dict(node, depth=1, hl_map=None, fold_threshold=80):
+    """将树节点转为 XMind 2020+ JSON 格式的 topic dict。
+
+    Args:
+        node: 树节点
+        depth: 当前深度（1=一级分支）
+        hl_map: {title: flag_id} 底色映射，仅标题有底色时插入同色旗帜
+        fold_threshold: notes 字符数超过此阈值的深层叶子节点自动折叠，默认80
     """
     topic = {
         'id': gen_id(),
@@ -435,17 +438,18 @@ def topic_to_dict(node, depth=1, hl_map=None):
         'title': node['title'],
     }
 
-    # 仅在标题有底色时插入对应旗帜（底色→旗帜映射由外部提供）
+    # 仅在标题有底色时插入对应旗帜（底色→旗帜映射由外部 hl_map 提供）
     if hl_map:
         flag = hl_map.get(node['title'])
         if flag:
             topic['markers'] = [{'markerId': flag}]
 
-    # 折叠规则：深层叶子节点且有较长 notes
+    # 折叠规则：深层叶子节点且 notes 较长时自动折叠
     num_children = len(node['children'])
-    if depth >= 3 and num_children > 2 and node.get('notes') and len(node['notes']) > 100:
+    notes_len = len(node.get('notes', '')) if node.get('notes') else 0
+    if depth >= 3 and num_children > 2 and notes_len > fold_threshold:
         topic['branch'] = 'folded'
-    if depth >= 4 and num_children == 0 and node.get('notes') and len(node['notes']) > 80:
+    if depth >= 4 and num_children == 0 and notes_len > fold_threshold:
         topic['branch'] = 'folded'
 
     # notes
@@ -454,13 +458,13 @@ def topic_to_dict(node, depth=1, hl_map=None):
 
     # 递归子节点
     if node['children']:
-        attached = [topic_to_dict(child, depth + 1, hl_map) for child in node['children']]
+        attached = [topic_to_dict(child, depth + 1, hl_map, fold_threshold) for child in node['children']]
         topic['children'] = {'attached': attached}
 
     return topic
 
 
-def create_xmind(md_path, xmind_path, right_count=None, theme_name='blue', hl_map=None):
+def create_xmind(md_path, xmind_path, right_count=None, theme_name='blue', hl_map=None, fold_threshold=80):
     """将 Markdown 转换为 XMind 2020+ 格式文件。
 
     Args:
@@ -469,6 +473,7 @@ def create_xmind(md_path, xmind_path, right_count=None, theme_name='blue', hl_ma
         right_count: 右侧分支数，None 则自动均等划分（左ceil右floor）
         theme_name: 主题色名称 blue/green/red
         hl_map: {title: flag_id} 底色→旗帜映射，仅标题有底色时插入旗帜
+        fold_threshold: notes 字符数超过此阈值的深层叶子节点自动折叠，默认80
     """
     if hl_map is None:
         hl_map = {}
@@ -496,8 +501,8 @@ def create_xmind(md_path, xmind_path, right_count=None, theme_name='blue', hl_ma
     # XMind unbalanced 布局规则：
     # children 数组中前 right_count 个放右侧（从上到下正序）
     # 剩余放左侧（从数组末尾往上渲染，需反序保证升序）
-    left_branches = [topic_to_dict(c, depth=1, hl_map=hl_map) for c in all_children[:left_count]]
-    right_branches = [topic_to_dict(c, depth=1, hl_map=hl_map) for c in all_children[left_count:]]
+    left_branches = [topic_to_dict(c, depth=1, hl_map=hl_map, fold_threshold=fold_threshold) for c in all_children[:left_count]]
+    right_branches = [topic_to_dict(c, depth=1, hl_map=hl_map, fold_threshold=fold_threshold) for c in all_children[left_count:]]
     left_branches.reverse()  # 反序：XMind 左侧从数组末尾往上渲染
     root_children = right_branches + left_branches
 
@@ -563,5 +568,7 @@ if __name__ == '__main__':
                         help='Number of branches on right side (default: half, rounded up)')
     parser.add_argument('--theme', choices=['blue', 'green', 'red'], default='blue',
                         help='Theme color (default: blue)')
+    parser.add_argument('--fold', type=int, default=80,
+                        help='Notes length threshold for auto-folding deep leaf nodes (default: 80)')
     args = parser.parse_args()
-    create_xmind(args.input, args.output, args.right, args.theme)
+    create_xmind(args.input, args.output, args.right, args.theme, fold_threshold=args.fold)

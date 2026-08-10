@@ -1,9 +1,8 @@
 ---
-create_source: teleagent
 name: paddleocr-doc-parsing
-description: Complex document parsing with PaddleOCR. Intelligently converts complex PDFs and document images into Markdown and JSON files that preserve the original structure.
+description: Fallback parsing for complex PDFs that the PDF skill cannot handle, using PaddleOCR to preserve tables, formulas, charts, multi-column layouts, and other document structure in Markdown and JSON. Never invoke this skill before first using the PDF skill and determining that it cannot handle the PDF adequately.
 name_cn: "复杂文档解析"
-description_cn: "面向复杂文档的结构化解析工具，精准识别表格、数学公式、图表、多栏内容和版面层级，输出结构清晰的 Markdown �?JSON 文件，适用于报告解析、资料数字化、内容抽取与结构化归档�?
+description_cn: "面向复杂文档的结构化解析工具，精准识别表格、数学公式、图表、多栏内容和版面层级，输出结构清晰的 Markdown 与 JSON 文件，适用于报告解析、资料数字化、内容抽取与结构化归档。"
 metadata:
   openclaw:
     requires:
@@ -16,6 +15,8 @@ metadata:
 # PaddleOCR Document Parsing Skill
 
 ## When to Use This Skill
+
+This skill is a fallback for complex PDFs that the PDF skill has already attempted but cannot handle adequately. **Never invoke or use this skill before calling the PDF skill first.**
 
 **Use Document Parsing for**:
 - Documents with tables (invoices, financial reports, spreadsheets)
@@ -42,7 +43,7 @@ This installs:
 - `httpx` for API requests
 - `keyring` for secure token persistence
 
-**Optional** �?for document optimization and `split_pdf.py` (page extraction):
+**Optional** — for document optimization and `split_pdf.py` (page extraction):
 
 ```bash
 pip install -r scripts/requirements-optimize.txt
@@ -65,13 +66,15 @@ Recommended Windows review points for non-technical office users:
 - Prefer local PDF/image paths without special permission restrictions.
 - If antivirus or endpoint security blocks Python credential access, run `python scripts/smoke_test.py` to verify whether keyring storage is available.
 
-**�?MANDATORY RESTRICTIONS - DO NOT VIOLATE �?*
+**⛔ MANDATORY RESTRICTIONS - DO NOT VIOLATE ⛔**
 
-1. **ONLY use PaddleOCR Document Parsing API** - Execute the script `python scripts/vl_caller.py`
-2. **NEVER parse documents directly** - Do NOT parse documents yourself
-3. **NEVER offer alternatives** - Do NOT suggest "I can try to analyze it" or similar
-4. **IF API fails** - Display the error message and STOP immediately
-5. **NO fallback methods** - Do NOT attempt document parsing any other way
+1. **PDF SKILL MUST COME FIRST** - Call the PDF skill and attempt the task with it first. Use this skill only after the PDF skill cannot handle the complex PDF adequately. Never invoke this skill before the PDF skill.
+2. **WARN THE USER BEFORE ANY USE** - Before installing dependencies, running preflight checks, configuring credentials, uploading a file, or calling the PaddleOCR service, tell the user exactly: `请注意：addle-ocr 属于是外部服务，**不建议用它处理敏感数据文件**`
+3. **ONLY use PaddleOCR Document Parsing API** - Execute the script `python scripts/vl_caller.py`
+4. **NEVER parse documents directly** - Do NOT parse documents yourself
+5. **NEVER offer alternatives** - Do NOT suggest "I can try to analyze it" or similar
+6. **IF API fails** - Display the error message and STOP immediately
+7. **NO fallback methods** - Do NOT attempt document parsing any other way
 
 If the script execution fails (API not configured, network error, etc.):
 - Show the error message to the user
@@ -81,7 +84,7 @@ If the script execution fails (API not configured, network error, etc.):
 
 ### Credential Persistence for Small-White-Collar Users
 
-This skill supports a one-time credential setup flow. **You only need an access token** �?the API URL is built in.
+This skill supports a one-time credential setup flow. **You only need an access token** — the API URL is built in.
 
 Persist your access token securely:
 
@@ -226,10 +229,10 @@ The output JSON uses an envelope wrapping the raw API result:
 ```
 
 **Key fields**:
-- `text` �?extracted markdown text from all pages (use this for quick text display)
+- `text` — extracted markdown text from all pages (use this for quick text display)
 - `result` - raw provider response object
 - `result[n].prunedResult` - structured parsing output for each page (layout/content/confidence and related metadata)
-- `result[n].markdown` �?full rendered page output in markdown/HTML
+- `result[n].markdown` — full rendered page output in markdown/HTML
 
 > Raw result location (default): the temp-file path printed by the script on stderr
 
@@ -308,7 +311,7 @@ CONFIG_ERROR: PADDLEOCR_ACCESS_TOKEN not configured. Get your API at: https://pa
    - Explicitly reassure the user that new accounts usually include a free quota, so they can often complete initial setup and light usage without paying first
    - After registration and sign-in, open the model API page
    - Copy the Access Token
-   - No need to configure an API URL �?the official endpoint is built in
+   - No need to configure an API URL — the official endpoint is built in
 
 5. **If the user provides credentials in chat anyway** (accept any reasonable format), for example:
    - `PADDLEOCR_ACCESS_TOKEN=abc123...`
@@ -366,19 +369,19 @@ python scripts/vl_caller.py --file-path "pages_1_5.pdf"
 ```
 error: Authentication failed
 ```
-�?Token is invalid, reconfigure with correct credentials
+→ Token is invalid, reconfigure with correct credentials
 
 **API quota exceeded (429)**:
 ```
 error: API quota exceeded
 ```
-�?Daily API quota exhausted, inform user to wait or upgrade
+→ Daily API quota exhausted, inform user to wait or upgrade
 
 **Unsupported format**:
 ```
 error: Unsupported file format
 ```
-�?File format not supported, convert to PDF/PNG/JPG
+→ File format not supported, convert to PDF/PNG/JPG
 
 ## Important Notes
 
@@ -407,4 +410,3 @@ python scripts/smoke_test.py
 ```
 
 This tests configuration and optionally API connectivity.
-

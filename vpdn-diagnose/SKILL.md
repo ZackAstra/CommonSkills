@@ -72,9 +72,10 @@ netsh winhttp show proxy
 **L1 — 系统代理例外（源端旁路，最彻底）**
 把 VPDN 服务器段加入 `ProxyOverride`，客户端请求直接不走代理：
 ```
-HKCU\...\Internet Settings\ProxyOverride += ;134.224.*;134.225.*;134.224.0.0/15
+HKCU\...\Internet Settings\ProxyOverride += ;134.224.*;134.225.*
 ```
 - Python（urllib3/requests）与 WinINet 都识别该例外
+- **⚠️ Windows ProxyOverride 不支持 CIDR**（如 `134.224.0.0/15`），只支持 `*` 通配符、`<local>`、主机名。写入 CIDR 会让 WinINet `InternetSetOption` 返回 `ERROR_INVALID_PARAMETER(87)`，导致整个系统代理设置失败（详见 A5）
 - **必须同时配置 Clash Verge 自身的例外**（`verge.yaml` 的 `system_proxy_bypass` + `use_default_bypass: false`），否则 Clash 的"代理守护"每 30s 会把例外重置回默认值
 
 **L2 — mihomo IP-CIDR/DOMAIN 直连规则（确定性兜底）**
@@ -127,6 +128,36 @@ $sr = New-Object System.IO.StreamReader($pipe)
 
 ---
 
+### A5. "system failed" / ProxyOverride 不支持 CIDR（2026-08 事故核心教训）
+
+**现象**：Clash Verge 开启系统代理后显示 `system failed`，Google 等网站全部打不开；VPDN 反而"看似正常"（代理根本没生效）。关闭系统代理时一切正常；重开必现失败。
+
+**直接原因**：`system_proxy_bypass`（最终写入注册表 `ProxyOverride`）中残留 CIDR 条目 `134.224.0.0/15`。Windows WinINet 的 ProxyOverride **只支持** `*` 通配符、`<local>`、主机名；传入 CIDR 时 `InternetSetOption(INTERNET_OPTION_PER_CONNECTION_OPTION)` 返回 `ERROR_INVALID_PARAMETER (87)` = `HRESULT 0x80070057` = "参数错误"，导致**整个系统代理设置失败**（不是个别网站不走代理，而是代理完全没打开）。
+
+**P/Invoke 实锤**（与 sysproxy crate 相同的 WinINet 调用）：
+- bypass 含 `134.224.0.0/15` → `lastError=87`（失败）
+- 仅通配符 `134.224.*;134.225.*` → `lastError=0`（成功）
+
+**日志特征**（Clash Verge `logs\latest.log`，开启 proxy guard 时每 30s 重试报错）：
+```
+ERROR [[Setup]] system call failed
+ERROR Failed to set system proxy: SystemCall(Error { code: HRESULT(0x80070057), message: "参数错误。" })
+```
+
+**为什么 Google 打不开**：系统代理设置失败 → 浏览器实际没走代理（系统代理开关无效），但界面显示已开启 → 表现为"所有网站无法访问"。
+
+**正确写法（双保险）**：
+1. `ProxyOverride` / `system_proxy_bypass` 用通配符：`134.224.*;134.225.*`（覆盖整个 /15 段）
+2. mihomo 侧规则兜底：`IP-CIDR,134.224.0.0/15,DIRECT`（即使 ProxyOverride 被覆盖/失效，VPDN 直连仍有保障）
+
+**排查清单（按序）**：
+1. 看 Clash Verge 日志是否有 `Failed to set system proxy: ...0x80070057` / `system call failed`
+2. 查注册表：`Get-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings` → `ProxyOverride` 是否含 CIDR
+3. 查残留注入点：`verge.yaml` 的 `system_proxy_bypass`、开机脚本（如 `disable_aonetun.ps1`）、注册表
+4. **改 `verge.yaml` 前必须先完全退出 Clash Verge**：应用退出时 `quit()` → `apply_all_and_save_file()` 会把内存配置写回 `verge.yaml`，运行中手改文件会被覆盖（先退出 → 改文件 → 再启动）
+5. 重启后验证：注册表无 CIDR、日志无 0x80070057、`Invoke-WebRequest https://www.google.com` 返回 200
+
+---
 ## 路径 B：拨号/隧道层错误（651 / 628 / 691 / 711 / 1062）
 
 ### B1. 服务健康（651/711/1062 常见根源）
@@ -171,6 +202,7 @@ wevtutil qe Application /q:"*[System[Provider[@Name='RasClient'] and EventID=202
 
 ## 综合验证方法（修完必须验证，按顺序）
 
+0. **系统代理有效性（"system failed" 专项）**：`ProxyOverride` 不得含 CIDR（只允许 `*`/`<local>`/主机名）；Clash Verge 日志无 `0x80070057`；`Invoke-WebRequest https://www.gstatic.com/generate_204` 走系统代理返回 204
 1. **运行时规则验证**（权威）：mihomo 管道 `GET /rules` 确认直连规则在 `rules[0]`，`GET /configs` 确认 `find-process-mode: always`
 2. **路由级验证**：`curl -x http://127.0.0.1:7897 http://<VPDN服务器>` 与 `curl`（直连）对比——**响应码/耗时一致**（如都 502/5s）说明流量已直连；若经代理超时（HTTP 000）说明仍走节点
    - 注意：若 VPDN 服务器仅在隧道内可达，需先拨号再验证
@@ -182,6 +214,7 @@ wevtutil qe Application /q:"*[System[Provider[@Name='RasClient'] and EventID=202
 - **只放行 VPDN 目标/进程**，规则放最前但别全局 DIRECT，其他流量仍走代理
 - **不要关 TUN**（用户环境是规则模式无 TUN），也别擅自全局禁用代理（会影响其他应用）
 - **验证规则"真加载"**：生成 yaml 里有 ≠ 运行时加载，一律用管道 API 查
+- **ProxyOverride 禁用 CIDR**：Windows 例外列表只认 `*` 通配符与 `<local>`，CIDR（如 `134.224.0.0/15`）会使整个系统代理设置失败（HRESULT 0x80070057 / "system failed"）；VPDN 直连兜底交给 mihomo `IP-CIDR,...,DIRECT` 规则
 - 客户端日志是**第一证据**；DNS 缓存、`route print` 只能辅助
 - 修复后重启 Clash Verge 会让改动落地；订阅更新可能重置 Rules 增强，需复查
 
