@@ -1,4 +1,4 @@
-# CommonSkills 项目
+﻿# CommonSkills 项目
 
 > **AI Agent 公共技能仓库（CommonSkills）** —— 统一管理跨 Agent 平台的共享技能（Skills），实现一处编写、多处复用。
 
@@ -237,11 +237,11 @@ chmod +x .git/hooks/post-checkout
 | Agent | 技能目录 | 加载方式 | 是否需要重启 |
 |-------|---------|---------|------------|
 | **Kimi Work 模式** | `~/AppData/Roaming/kimi-desktop/daimon-share/daimon/skills/` | 复制（原生目录） | ✅ 需要重启客户端 |
-| **Kimi Code IDE** | `~/.kimi/skills/` | 软链接 | ❌ 实时生效 |
-| **Cursor** | `~/.cursor/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
-| **Codex** | `~/.codex/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
-| **Trae** | `~/.trae/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
-| **Qoder** | `~/.qoder/skills/` 或 `~/.agents/skills/` | 软链接 | ❌ 实时生效 |
+| **Kimi Code IDE** | `~/.kimi/skills/` | 软链接 / Junction | ❌ 实时生效 |
+| **Cursor** | `~/.cursor/skills/` 或 `~/.agents/skills/` | 软链接 / Junction | ❌ 实时生效 |
+| **Codex** | `~/.codex/skills/` 或 `~/.agents/skills/` | 软链接 / Junction | ❌ 实时生效 |
+| **Trae** | `~/.trae/skills/` 或 `~/.agents/skills/` | 软链接 / Junction | ❌ 实时生效 |
+| **Qoder** | `~/.qoder/skills/` 或 `~/.agents/skills/` | 软链接 / Junction | ❌ 实时生效 |
 
 > 注：`~/.agents/skills/` 是通用共享目录，被多个 Agent 支持。
 
@@ -333,6 +333,7 @@ Kimi 客户端打包了 34 个内置技能（`builtin-skills`），位于：
 | 1.1.3 | 2026-07-15 | docs: 新增完整复盘验证报告 `_FINAL_VERIFICATION_REPORT.md` |
 | 1.1.4 | 2026-08-03 | docs: 技能总数 62 -> 86；同步 vpdn-diagnose 全链路更新与 elsewhere-api.ps1 |
 | 1.1.5 | 2026-08-04 | docs: 技能总数 86 -> 87；新增 yunmai-disable（企业 SASE/EDR 客户端静默与禁用方法论） |
+| 1.1.6 | 2026-08-10 | docs: 通道 A 补全各 Agent 独立技能目录（~/.codex、~/.cursor、~/.trae、~/.qoder）并明确 Junction 为免管理员等效方案；移除空壳技能 kimi-webbridge-desktop 与 ppt-master |
 
 ---
 
