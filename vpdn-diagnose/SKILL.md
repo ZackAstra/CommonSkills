@@ -1,11 +1,11 @@
 ---
 name: vpdn-diagnose
-description: 综合 VPDN（江苏电信 dx_vpdn / JxTelecomVPDN / 奇安信 TrustAgent）Windows 拨号客户端故障排查。用于"VPDN 服务端访问失败"、651/628/691/618/800 等拨号错误、自检通过但连接失败、Clash/代理共存场景下的反复断连。覆盖代理劫持、Clash Verge 规则注入失效、RAS/Telephony 服务、WAN Miniport 驱动、WMI 权限、DNS、多 VPN 共存、ctEAO 虚拟网卡干扰。包含三层直连修复（系统代理例外 + mihomo IP-CIDR/进程规则 + find-process-mode）与运行时规则验证方法。
+description: 综合 VPDN（江西电信 dx_vpdn / JxTelecomVPDN / 奇安信 TrustAgent）Windows 拨号客户端故障排查。用于"VPDN 服务端访问失败"、651/628/691/618/800 等拨号错误、自检通过但连接失败、Clash/代理共存场景下的反复断连。覆盖代理劫持、Clash Verge 规则注入失效、RAS/Telephony 服务、WAN Miniport 驱动、WMI 权限、DNS、多 VPN 共存、ctEAO 虚拟网卡干扰。包含三层直连修复（系统代理例外 + mihomo IP-CIDR/进程规则 + find-process-mode）与运行时规则验证方法。
 ---
 
 # VPDN Client Troubleshooting（全链路方法论文档）
 
-本技能基于真实故障全链路复盘：江苏电信 VPDN（dx_vpdn + 奇安信 TrustAgent）在 Clash Verge 系统代理开启时反复报"VPDN 服务端访问失败"。核心教训：**不要只依赖"禁用代理"这类临时手段，也不要假定规则"加上就生效"——必须验证规则真正被运行时加载**。
+本技能基于真实故障全链路复盘：江西电信 VPDN（dx_vpdn + 奇安信 TrustAgent）在 Clash Verge 系统代理开启时反复报"VPDN 服务端访问失败"。核心教训：**不要只依赖"禁用代理"这类临时手段，也不要假定规则"加上就生效"——必须验证规则真正被运行时加载**。
 
 ## 0. 症状分类（入口路由，先定边界）
 
@@ -48,7 +48,7 @@ new4a_qrcode_get: Err 30 Expecting value: line 1 column 1 (char 0)
 - **修复成功的标志**：同一行变成 `Req OK 200 {'code': 0, 'msg': '获取二维码成功', ...}`
 
 **从日志提取真实服务器段（关键，不要猜）：** 汇总所有失败 `Req http://<host>:<port>` 的 host。
-- 江苏电信实测：`134.225.85.56:9090`（主）、`134.224.230.142:8000`（二维码认证）、`134.224.13.23:9090`（备份）→ 全部落在 **`134.224.0.0/15`**
+- 江西电信实测：`134.225.85.56:9090`（主）、`134.224.230.142:8000`（二维码认证）、`134.224.13.23:9090`（备份）→ 全部落在 **`134.224.0.0/15`**
 - 此前 DNS 缓存里的 `ym.ctct.cn`、`imtwo.zdxlz.com` 是**浏览器流量，不是 VPDN 服务器**——以客户端日志为准，别被 DNS 缓存误导
 
 **边界：客户端自身的 bug 不要修。** 备份 URL 形如 `http:// 134.224.13.23`（`http://` 后带空格 → host 变 `%20134.224.13.23`）时永远失败，这是客户端缺陷；只要主服务器可用即可，无需也无法修复。
