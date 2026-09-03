@@ -38,6 +38,16 @@ CommonSkills/
 
 ---
 
+## 🧬 Nature Skills
+
+`nature-*` 技能来自 [Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills)，已于 2026-09-03 统一合并到本仓库，上游同步版本为 `596f65b`。这些技能面向科研工作流，包括文献检索与下载、阅读和文献管线、实验日志、统计与数据、科研绘图、论文/PPT/专利写作、审稿回复、引用核验等。
+
+- 本仓库保留完整的 `SKILL.md`、`README.md`、`references/`、脚本和静态资产，`nature-shared` 作为内部共享支持包随其余 `nature-*` 技能一起保留。
+- 不要单独安装到某个 Agent 的私有目录；先更新本仓库中的 `nature-*` 技能，再通过现有同步机制分发到 Cursor、Codex、Kimi 等支持的 Agent。
+- 后续更新时，可把上游仓库 clone 到临时目录，确认技能名与本地无冲突后，用 `Copy-Item -Path <temp>\skills\nature-* -Destination . -Recurse -Force` 覆盖合并，并更新这里的同步版本。
+
+---
+
 ## 🔧 双通道 Agent 加载机制
 
 不同 Agent 平台对技能目录的加载方式不同，本项目采用 **双通道方案**：
