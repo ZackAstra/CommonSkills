@@ -58,6 +58,9 @@ Policy limits are requirements, not obstacles. A bridge that only works by imper
 | empty `content`, non-empty reasoning | model produced only reasoning | return an explicit error or a cleaned fallback; never silently empty |
 | image request triggers file reads | agent tries to inspect the attachment path | attach rendered images, state they are visible, and choose a no-tool agent |
 | history makes every call expensive | entire conversation replayed into an agent with a large system prompt | send the latest user turn for image tasks; trim history deliberately |
+| first text part is a plan | bridge accepted any text before `finish=stop` | wait for a `finish=stop` text message; ignore `tool-calls` text |
+| reasoning tokens > 0 but no reasoning in output | token count is not a channel | inspect content parts and `fallback`; do not infer leakage from tokens |
+| `reasoning_only` / `tool_calls_only` 502 | strict final-text guard | not a bridge bug; retry/rephrase or enable a labeled fallback |
 
 ## Images and files
 

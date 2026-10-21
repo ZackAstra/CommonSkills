@@ -124,13 +124,20 @@ The probe prints status, latency, content, finish reason, usage, and warnings (r
 - **Default regression**: send one message on the original default model.
 - **Role check**: state whether the app is acting as Source or Target; confirm the profile/config belongs to that role. For the same app in both roles, do not reuse the other role’s assumptions.
 
+### Final-text and reasoning check
+
+- Inspect the raw response: the assistant message should have only `role`/`content`, `finish_reason` should be `stop`, and there should be no `reasoning_content`.
+- Bridge log: a normal answer has `fallback:false`; an incomplete turn has `error: reasoning_only` / `tool_calls_only`; `fallback:true` only when an explicit opt-in is enabled.
+- Send a prompt that triggers reasoning/tool use; expect a final `finish=stop` text or a clear 502, never a reasoning transcript.
+- A reasoning-token count > 0 is not proof of leakage; check the content parts and fallback flag.
+
 ## 5. Source-mode and role checks
 
 | Mode | Minimal acceptance | Stop condition |
 |---|---|---|
 | S1 | neutral client calls `/models` and a minimal chat with the key | key invalid/revoked |
 | S2a | Source local API works directly; thin bridge preserves streaming/usage | undocumented API is unstable or auth is not legitimately reusable |
-| S2b | Source UI works; bridge returns final text and deletes the session | free-tier/client binding cannot be satisfied legitimately |
+| S2b | Source UI works; bridge returns a final `finish=stop` text and deletes the session; incomplete turns fail with `reasoning_only`/`tool_calls_only` | free-tier/client binding cannot be satisfied legitimately |
 | S3 | official credential + documented signature contract + replay/window test | any of these missing → stop |
 | S4 | evidence report only (endpoint/model IDs/auth requirements) | do not deliver a working bridge claim |
 
@@ -168,6 +175,12 @@ Answer all of these before declaring success:
 11. Are temp images/sessions/tokens cleaned up?
 12. Did any step bypass a security control? If yes, stop.
 
+Additional checks:
+
+- Did the bridge wait for `finish=stop`, or return the first text part from a `tool-calls` message?
+- Was a reasoning-token count mistaken for reasoning leakage? Check the content parts and `fallback`.
+- Does a reasoning-only/tool-calls-only turn fail clearly instead of returning a plan?
+
 ## 8. Acceptance record template
 
 ```text
@@ -180,6 +193,7 @@ Bridge endpoint:
 Target profile path:
 Auth owner / expiry:
 Capabilities verified: text / stream / image / tools / reasoning
+Fallback policy: reasoning fallback disabled / opt-in labeled
 Usage observed (prompt/completion/total, cached):
 Latency:
 Failure cases tested:

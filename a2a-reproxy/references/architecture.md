@@ -95,6 +95,7 @@ Optional: `/v1/models/{id}`, `/metrics`, `/version`. Do not implement endpoints 
 - Accept both string content and OpenAI content-part arrays.
 - Keep `system`/`developer` messages only if the upstream supports them; otherwise fold them into the prompt deliberately and document the change.
 - For image requests, prefer the latest user message plus the last image-bearing user message. Sending the entire history to an agent upstream multiplies system/tool overhead and can trigger tool loops.
+- For agent-session upstreams, apply the direct-answer/no-tools instruction to text and image requests; the bridge does not forward the Source's tool calls to the Target.
 - Preserve `max_tokens`, `temperature`, `top_p`, `stop` only when the upstream supports them. Do not silently drop a parameter the caller depends on; log it as unsupported.
 - Reject unknown model IDs with `404` rather than silently substituting a default.
 
@@ -104,6 +105,9 @@ Optional: `/v1/models/{id}`, `/metrics`, `/version`. Do not implement endpoints 
 - Stream response: valid SSE frames, a role delta first, content deltas, a final `finish_reason`, usage on the final chunk, then `data: [DONE]`.
 - If the upstream is non-streaming, synthesize SSE. Never emit raw upstream events that the Target cannot parse.
 - If the upstream streams, relay but normalize event names and ensure usage is present.
+- Agent-session upstream: wait for an assistant message with `finish=stop` and a non-empty text part; never return text from a `tool-calls` message.
+- Do not synthesize content from reasoning. Default to `502 reasoning_only` / `tool_calls_only` when no final text exists; only a clearly labeled, opt-in fallback may return cleaned reasoning.
+- Keep the downstream assistant message to `role` + `content`; do not add `reasoning_content` unless the Target explicitly supports it.
 - On client disconnect, abort the upstream request and clean up the session/files.
 
 ### 4.4 Error mapping
@@ -118,6 +122,9 @@ Optional: `/v1/models/{id}`, `/metrics`, `/version`. Do not implement endpoints 
 | rate limit/quota | 429 | `rate_limited` |
 | upstream timeout | 504 | `upstream_timeout` |
 | upstream 5xx / malformed | 502 | `upstream_error` |
+| final turn has tool calls but no final text | 502 | `tool_calls_only` |
+| only reasoning, no final text | 502 | `reasoning_only` |
+| empty final text | 502 | `empty_response` |
 
 Never turn an upstream failure into `200 OK` with a fake assistant message. A stub that returns `pong` is worse than an error because it poisons validation.
 
@@ -183,7 +190,7 @@ If the upstream only reports output, mark usage as estimated; do not report zero
 | Domain | Typical symptom | First check |
 |---|---|---|
 | Source auth | 401/403 before any model work | token expiry, owner/device binding, signature headers |
-| Source agent | tool loops, reasoning-only output, long latency | agent choice, prompt, session messages |
+| Source agent | tool loops, reasoning-only output, first text part is a plan, long latency | agent choice, prompt, session messages, `finish` |
 | Bridge normalization | Target parses nothing / empty content | SSE framing, content-part shape, final message selection |
 | Target config | model not in picker, request goes to default | live profile path, provider row merge semantics, restart |
 | Network/runtime | connection refused, port conflict | listener PID, firewall, IPv6 vs IPv4 |
@@ -192,6 +199,9 @@ If the upstream only reports output, mark usage as estimated; do not report zero
 ## 8. Anti-patterns
 
 - Returning reasoning text as `content`.
+- Returning the first text part from a `tool-calls` message as if it were the final answer.
+- Falling back to reasoning by default, or without a marker in logs/delivery notes.
+- Treating a reasoning-token count as proof that the bridge returned reasoning.
 - Reusing one Source session for all requests.
 - Hardcoding `contextWindow` to the provider maximum while the Source agent injects tens of thousands of tokens.
 - Editing the Target's default-model row when the requirement is "add a provider".

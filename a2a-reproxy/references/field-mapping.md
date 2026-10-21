@@ -202,6 +202,10 @@ Mapping rules:
 - Never concatenate reasoning into `content`.
 - Prefer the final assistant message; if only reasoning exists, return an explicit error or a clearly labeled fallback, not a silent guess.
 - If the Source agent tends to call tools, choose a general/no-tool agent and state "answer directly" in the prompt. Do not disable security controls; choose the supported agent mode.
+- **Agent-session final selection**: only a `finish=stop` assistant message with a non-empty `text` part is final. Text in a `tool-calls` message is a plan/intermediate, not the answer.
+- **Reasoning tokens are not a channel**: a `reasoning` token count > 0 does not mean the bridge returned reasoning. Check the assistant content parts and the bridge's `fallback` flag.
+- **Default policy**: no reasoning fallback. Return `reasoning_only` / `tool_calls_only` when no final text exists; if an opt-in fallback is enabled, mark it in logs and delivery notes.
+- Observed case (2026-10-21): an 18:25 plain-text request returned final text with `fallback:false`; a 17:50 request had `finish=tool-calls` and `fallback:true`, a true reasoning fallback. A UI that labels content as reasoning can be the Source agent writing a plan into its final text, not the bridge forwarding the reasoning channel.
 - `reasoningEfforts` maps only to real upstream variants. If the Source ignores variants, omit the mapping.
 - A Target may render reasoning differently from the Source; that is a UI/framework difference, not evidence that the bridge is broken.
 

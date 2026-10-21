@@ -164,7 +164,7 @@ Session/TTL: <创建/复用/删除/清理>
 
 ### 3. 最小实现
 
-先实现 `GET /v1/models`、`POST /v1/chat/completions`、SSE、usage、`/health` 与 `/ready`。图片桥接再做 content parts → 文件/附件；reasoning 只做通道选择，不把 reasoning 当 content 返回。
+先实现 `GET /v1/models`、`POST /v1/chat/completions`、SSE、usage、`/health` 与 `/ready`。图片桥接再做 content parts → 文件/附件；reasoning 只做通道选择。Agent-session 桥只接受 `finish=stop` 的最终 text；tool-calls 中间态和 reasoning 不得当答案；reasoning 回退默认关闭，需显式 opt-in。
 
 ### 4. 分层验证
 
@@ -230,7 +230,8 @@ preflight → discover target profile → backup → add-only provider/model
 - **硬编码路径/端口/进程名**：换机器就失效；先发现，再参数化。
 - **签名/私有 relay**：URL+token 不够；不要盲试排列；无官方契约就停止。
 - **免费档**：免费模型可能只允许 Source 客户端内部使用；不要绕过。
-- **Agent vs 模型**：build/general Agent 可能跑工具；reasoning 可能被当答案；图片请求优先只发最新用户消息并明确“不要工具/验证”。
+- **Agent vs 模型**：build/general Agent 可能跑工具；第一个 text part 可能只是计划；只接受 `finish=stop` 的最终 text，tool-calls 中间态和 reasoning 不得当答案；reasoning 回退默认关闭。图片请求优先只发最新用户消息并明确“不要工具/验证”。
+- **reasoning tokens ≠ 泄露**：日志里 reasoning token >0 不代表返回了 reasoning；要看 content parts 与 `fallback`/`error`。
 - **Usage 漏 cache**：只报 input 会严重低估上下文。
 - **Context 预算**：Source Agent 会注入大量 system/tool 提示；不要把 Target 预算设成模型裸上限。
 - **配置 profile**：桌面/Web/CLI profile 可能不同；改错位置看起来“没生效”。
