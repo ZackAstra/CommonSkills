@@ -21,7 +21,7 @@ description: Agent-to-agent model capability reverse proxying (A2A_reproxy / 反
 |---|---|---|---|
 | **S1 标准 API + Key** | 官方文档/控制台、独立签发的 key；中性客户端可调 `/models` 与 chat | Target 直连；必要时加薄协议/鉴权代理 | Target 的增量 provider 配置；不需要桥时不要造桥 |
 | **S2a 本地标准 API** | Source 在本机暴露 OpenAI 兼容或同类 API，只有鉴权/路径差异 | 薄桥：鉴权注入、路径/模型映射 | 桥 + Target 增量配置 |
-| **S2b Agent 登录态 / Session** | 模型只在 Source 客户端/本地 session 内可用；直连云 API 返回免费档/权限错误 | Agent-session 桥：创建会话、提交消息/附件、取最终文本、清理 | 必须接受“嵌套 Agent”语义；免费档/工具/上下文限制写入交付说明 |
+| **S2b Agent 登录态 / Session** | 模型只在 Source 客户端/本地 session 内可用；直连云 API 返回免费档/权限错误；**先查官方 CLI/Agent SDK、PAT/Service Account，内部 401 端口不是唯一入口** | Agent-session 桥：创建会话、提交消息/附件、取最终文本、清理 | 必须接受“嵌套 Agent”语义；免费档/工具/上下文限制写入交付说明 |
 | **S3 签名 / 私有 Relay** | 逐请求签名、owner/device/install 绑定；只有 URL+token 会报缺头/签名错误 | 仅有官方凭证与公开签名契约时才做签名适配 | 无合法凭证/契约 → 停止；不要爆破签名、不要绕过反调试 |
 | **S4 仅逆向出配置** | 从制品/日志只拿到 URL、model ID、header 名称，没有可用凭证或 session | 只作为可行性/架构证据 | 不把它叫作“可用的反代”或“已接好” |
 

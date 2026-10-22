@@ -60,6 +60,10 @@ Thin bridge: inject auth, rewrite paths/model IDs, normalize errors/usage. Prefe
 - Direct cloud calls return `FreeTierError`, `403`, or a client/version error.
 - A local session API exists (create session, submit prompt, read messages).
 
+**Official CLI/SDK first**
+
+Before treating an internal local port as the only route, check the vendor's official docs for a supported CLI or Agent SDK with PAT/Service Account auth. That is the preferred S2b route: documented auth, model selection, streaming, and permission controls. Example: Qoder Agent SDK (`@qoder-ai/qoder-agent-sdk`) with `QODER_PERSONAL_ACCESS_TOKEN`, `model: 'dfmodel'`, `tools: []`; the desktop app's internal port 54505 is auth-bound and should not be reused.
+
 **What the bridge inherits**
 
 The Source agent’s system prompt, tool policy, context overhead, free-tier restrictions, and reasoning/tool intermediate states. The bridge is an embedded client of that agent, not a pure model proxy.

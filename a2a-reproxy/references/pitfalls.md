@@ -12,6 +12,7 @@ Each entry: symptom → root cause → action. Keep the evidence; "it worked onc
 | Same app behaves inconsistently as Source and Target | role confusion | classify the role first; Source runs its own agent loop, Target also runs its own loop; do not copy one role's config/behavior to the other |
 | Signed relay treated as a normal provider | S3 requires owner/device-bound signing | stop without official credential/contract; do not brute-force |
 | Free-tier model fails outside the Source client | policy binds access to the client/agent | use the supported path or a standard provider; do not impersonate the client |
+| Internal local port returns 401 and is assumed to be the only route | vendor may expose an official CLI/Agent SDK with PAT/service-account auth | check official docs first; use the SDK/CLI instead of extracting tokens |
 
 ## Discovery and analysis
 
