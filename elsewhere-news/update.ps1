@@ -95,6 +95,15 @@ try {
         exit 0
     }
 
+    # Preserve the local Windows compatibility appendix across upstream updates
+    $windowsNotes = Join-Path $SkillDir "windows-notes.md"
+    if ((Test-Path -LiteralPath $windowsNotes) -and ($remoteContent -notmatch 'Windows hosts:')) {
+        $appendix = (Get-Content -LiteralPath $windowsNotes -Raw -Encoding utf8).Trim()
+        if ($appendix) {
+            $remoteContent = $remoteContent.TrimEnd() + "`n`n" + $appendix + "`n"
+        }
+    }
+
     # Update the local file
     $remoteContent | Out-File -FilePath $skillFile -Encoding utf8 -Force
     Write-UpdateLog "Updated elsewhere-news skill from v$($localVersion -as [string]) to v$remoteVersion"

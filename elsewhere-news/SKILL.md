@@ -4,7 +4,7 @@ version: 2.7.0
 bundle-version: 1
 description: Read Elsewhere reporting anonymously, or use an optional key for cited search, full text, graph data, personas, and personal context.
 user-invocable: true
-compatibility: "Anonymous mode needs web access. Connected mode needs Bash, curl 8.4+, and a host-injected key; repair needs writable Skill storage and SHA-256."
+compatibility: "Anonymous mode needs web access. Connected mode needs Bash, curl 8.4+, and a host-injected key; Windows uses the bundled PowerShell client. Repair needs writable Skill storage and SHA-256."
 metadata:
   openclaw:
     requires:
@@ -38,6 +38,15 @@ The locally pinned client is:
 - SHA-256: `0d873b80ab62bdde442b05c08dae5ea50e8d478f6cfe913b35c73d004b9b50b1`
 
 Let `{baseDir}` be the canonical directory containing this loaded `SKILL.md`, as supplied by the host or installer. Never search for or guess another install path.
+
+**Windows hosts:** On Windows, `bash` on `PATH` is usually the WSL launcher (`C:\Windows\System32\bash.exe`) and fails with `execvpe(/bin/bash)` when no distribution is installed. The pinned `.sh` client also rejects non-ASCII query arguments under Git Bash. Use the bundled native client instead; it enforces the same read-only route allowlist, key format, bearer auth, and error mapping:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File {baseDir}/scripts/elsewhere-api.ps1 check-version
+pwsh -NoProfile -ExecutionPolicy Bypass -File {baseDir}/scripts/elsewhere-api.ps1 /me/context lang=zh
+```
+
+Use `pwsh` (PowerShell 7) when available, otherwise `powershell`; both decode responses as UTF-8. The PowerShell client is the supported Windows transport. The pinned `.sh` client remains canonical on POSIX hosts; never substitute any other credential or transport path.
 
 1. Accept only a regular non-symlink file with the pinned size/SHA-256 that passes `bash -n`. Use an installed SHA-256 tool; never install one.
 2. If the path exists but any check fails, do not execute, replace, or download over it. Set `BLOCKED`, stop connected work, and ask for a complete Skill repair or upgrade.

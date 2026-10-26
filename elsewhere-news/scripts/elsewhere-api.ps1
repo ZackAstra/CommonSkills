@@ -25,6 +25,30 @@ if (-not ($env:ELSEWHERE_KEY -match '^els_live_') -and (Test-Path $EnvFile)) {
 
 $BaseUrl = "https://elsewhere.news/api/v1"
 
+try {
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+    $OutputEncoding = [System.Text.Encoding]::UTF8
+} catch {}
+
+try {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+} catch {}
+
+function Get-ElsewhereJson {
+    param(
+        [string]$Uri,
+        [hashtable]$Headers
+    )
+
+    $response = Invoke-WebRequest -Uri $Uri -Method GET -Headers $Headers -UseBasicParsing -MaximumRedirection 0 -TimeoutSec 45 -ErrorAction Stop
+    $bytes = $response.RawContentStream.ToArray()
+    $text = [System.Text.Encoding]::UTF8.GetString($bytes)
+    if (-not $text) {
+        return $null
+    }
+    return ($text | ConvertFrom-Json)
+}
+
 # Validate ELSEWHERE_KEY for non-check-version routes
 if ($Route -ne "check-version") {
     if (-not ($env:ELSEWHERE_KEY -match '^els_live_[A-Za-z0-9_-]{43}$')) {
@@ -69,7 +93,7 @@ if ($Route -eq "check-version") {
     $env:SSLKEYLOGFILE = ""
     
     try {
-        $response = Invoke-RestMethod -Uri "https://elsewhere.news/.well-known/elsewhere-skill.json" -Method GET -Headers @{"Accept"="application/json"} -ErrorAction Stop
+        $response = Get-ElsewhereJson -Uri "https://elsewhere.news/.well-known/elsewhere-skill.json" -Headers @{"Accept"="application/json"}
         $env:ELSEWHERE_KEY = $savedKey
         $response | ConvertTo-Json -Compress
         exit 0
@@ -102,7 +126,7 @@ $headers = @{
 }
 
 try {
-    $response = Invoke-RestMethod -Uri $fullUrl -Method GET -Headers $headers -ErrorAction Stop
+    $response = Get-ElsewhereJson -Uri $fullUrl -Headers $headers
     $response | ConvertTo-Json -Depth 20 -Compress
 } catch {
     $statusCode = $_.Exception.Response.StatusCode.value__
