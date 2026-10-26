@@ -285,6 +285,10 @@ Kimi 客户端打包了 34 个内置技能（`builtin-skills`），位于：
 ```
 这些技能有 `builtInSkillsSha256` 校验，不建议修改。
 
+### 4. 宿主被动更新技能会写穿透仓库
+
+若宿主技能目录是指向仓库的 Junction，该宿主自行更新技能时会直接改写仓库文件（历史事故：`time-awareness`、`worker-safety`、`kimiim` 的 frontmatter 被回退）。处置方式见 [docs/skill-host-sync.md](docs/skill-host-sync.md)：优先把宿主的写目录隔离出去并保留 `extra_skill_dirs` 只读加载。
+
 ---
 
 ## 🔧 故障排查
